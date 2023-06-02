@@ -1,6 +1,4 @@
-# Micro Frontend RCA (@cnic/rca)
-
-Micro Frontend RCA
+# Micro Frontend
 
 ## Install the dependencies
 ```bash

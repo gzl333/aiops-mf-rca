@@ -1,7 +1,8 @@
 // en
 export default {
-  wallet: 'Wallet',
+  rca: 'Root Cause Analysis',
   error: 'Error',
   goBack: 'Go Back',
+  appVersion: 'App Version',
   releaseTime: 'Release Time'
 }

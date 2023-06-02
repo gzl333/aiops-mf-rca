@@ -21,6 +21,7 @@ const tc = i18n.global.tc
 
 const activeItem = computed(() => store.items.currentPath[0])
 
+const appVersion = process.env.appVersion
 const releaseTime = process.env.releaseTime
 
 </script>
@@ -68,8 +69,13 @@ const releaseTime = process.env.releaseTime
           </q-list>
 
           <div class="row justify-center q-pt-lg">
-            <q-icon class="text-center" name="info" color="grey-5" size="xs">
+            <q-icon class="text-center" name="info" color="grey-4" size="xs">
               <q-tooltip class="bg-grey-3">
+                <div class="text-grey text-caption text-center">{{ tc('appVersion') }}</div>
+                <div class="text-grey text-caption text-center">
+                  {{ appVersion }}
+                </div>
+
                 <div class="text-grey text-caption text-center">{{ tc('releaseTime') }}</div>
                 <div class="text-grey text-caption text-center">
                   {{ new Date(releaseTime).toLocaleString(i18n.global.locale as string) }}

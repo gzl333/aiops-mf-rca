@@ -17,9 +17,9 @@ export default function () {
         // html: true,
         message: isSecret ? `${tc('已经复制到剪切板')}` : `${text} ${tc('已经复制到剪切板')}`,
         position: 'bottom',
-        closeBtn: false,
-        // timeout: 2000,
-        multiLine: true
+        closeBtn: true,
+        timeout: 3000,
+        multiLine: false
       })
     })
   }
