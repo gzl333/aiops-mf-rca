@@ -1,6 +1,7 @@
 <!-- 故障拓扑页 -->
 <script setup lang="ts">
-import { ref, computed, reactive, watch } from 'vue'
+import { ref, reactive, watch } from 'vue'
+import { date } from 'quasar'
 import { storeToRefs } from 'pinia'
 import { useStore } from 'stores/rca/topological'
 import { i18n } from 'boot/i18n'
@@ -13,7 +14,7 @@ import OverviewCmpt from 'src/components/rca/topological/OverviewCmpt.vue'
 
 const tc = i18n.global.tc
 const store = useStore()
-const { currentBusiness, businessOps, startTime, endTime } = storeToRefs(store)
+const { businessOps } = storeToRefs(store)
 
 const selectCmpt = ref()
 const topoCmpt = ref()
@@ -23,28 +24,44 @@ const isOverview = ref(false) // 是否展示概览信息
 const topoPadding = ref(726)
 
 const queryParams = reactive({
-  // business: currentBusiness,
-  // timeRange: [startTime, endTime]
-  business: {},
-  timeRange: []
+  business: {
+    label: '邮件系统',
+    value: '111'
+  },
+  timeRange: [date.formatDate(date.subtractFromDate(Date.now(), { minutes: 5 }), 'YYYY-MM-DD HH:mm'), date.formatDate(Date.now(), 'YYYY-MM-DD HH:mm')]
 })
 
 /**
- * @desc: 修改传参并更新store（当前业务系统/选中时间范围）
+ * @desc: 监听时间选择数据，并更新store
+ * @return {*}
+ */
+watch(() => queryParams.timeRange, (val) => {
+  store.$patch({
+    startTime: val[0],
+    endTime: val[1]
+  })
+}, {
+  immediate: true
+})
+
+/**
+ * @desc: 监听业务系统选择数据，并更新store
+ * @return {*}
+ */
+watch(() => queryParams.business, (val) => {
+  store.currentBusiness = val
+}, {
+  immediate: true
+})
+
+/**
+ * @desc: 同步业务系统和时间组件值
  * @param {*} field
  * @param {*} val
  * @return {*}
  */
 const changeParams = (field: 'business' | 'timeRange', val: any) => {
-  // queryParams[field] = val
-  if (field === 'business') {
-    store.currentBusiness = val
-  } else {
-    store.$patch({
-      startTime: val[0],
-      endTime: val[1]
-    })
-  }
+  queryParams[field] = val
   console.log('queryParams===>', queryParams)
 }
 
@@ -176,7 +193,7 @@ const drawerRight = ref(true)
           text-color="white"
           dense
           unelevated
-          :title="drawerRight? '收缩概览' : '展开概览'"
+          :title="drawerRight? tc('Shrink') : tc('Expand')"
           :icon="drawerRight? 'chevron_right' : 'chevron_left'"
           @click="drawerRight = !drawerRight, topoCmpt.resetContainer()"
         />

@@ -15,5 +15,7 @@ export default {
   close: '关闭',
   // 拓扑图页
   topoDgm: '拓扑图',
-  sysOverview: '系统概览'
+  sysOverview: '系统概览',
+  expand: '展开',
+  shrink: '收缩'
 }

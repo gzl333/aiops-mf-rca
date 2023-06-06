@@ -1,5 +1,5 @@
 /* eslint-disable camelcase */
-// 接口文档： http://159.226.235.137:8000/apidocs/
+// 接口文档： https://aiopsbackend.cstcloud.cn/apidocs/
 
 import { axiosAiops } from 'boot/axios'
 

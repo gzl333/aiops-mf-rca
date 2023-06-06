@@ -23,55 +23,23 @@ const props = withDefaults(defineProps<Props>(), {
 const emit = defineEmits(['changeTimeRange'])
 const timePickedStart = ref(props.timeRange[0])
 const timePickedEnd = ref(props.timeRange[1])
-// const timePickedStart = computed({
-//   get () {
-//     return props.timeRange[0]
-//   },
-//   set (newVal) {
-//     debugger
-//     emit('changeTimeRange', [newVal, timePickedEnd.value])
-//   }
-// })
-// const timePickedEnd = computed({
-//   get () {
-//     return props.timeRange[1]
-//   },
-//   set (newVal) {
-//     emit('changeTimeRange', [timePickedStart.value, newVal])
-//   }
-// })
+
 watch(() => timePickedStart.value, (val) => {
-  emitTimeRangeChanged()
+  timeRangeChanged()
 })
 
 watch(() => timePickedEnd.value, (val) => {
-  emitTimeRangeChanged()
+  timeRangeChanged()
 })
 
-const emitTimeRangeChanged = () => {
-  const start = new Date(timePickedStart.value)
-  const end = new Date(timePickedEnd.value)
+/**
+ * @desc: 更改时间时触发
+ * @return {*}
+ */
+const timeRangeChanged = () => {
+  const start = timePickedStart.value
+  const end = timePickedEnd.value
   emit('changeTimeRange', [start, end])
-}
-/**
- * @desc: 更改日期时触发（传出到父组件供使用）
- * @param {*} value
- * @param {*} reason
- * @param {*} details
- * @return {*}
- */
-const checkDateValue = (value: any, reason: any, details: any) => {
-  console.log(value, reason, details, 'timePickedStart.value: ', timePickedStart.value, 'timePickedEnd.value: ', timePickedEnd.value)
-}
-
-/**
- * @desc: 更改时间时触发（传出到父组件供使用）
- * @param {*} value
- * @param {*} details
- * @return {*}
- */
-const checkTimeValue = (value: any, details: any) => {
-  console.log(value, details, 'timePickedStart.value: ', timePickedStart.value, 'timePickedEnd.value: ', timePickedEnd.value)
 }
 
 /**
@@ -86,10 +54,6 @@ const timeRangeVali = (val: string) => {
   return date.isValid(val) || '请输入正确格式的时间'
 }
 
-defineExpose({
-  checkDateValue,
-  checkTimeValue
-})
 </script>
 
 <template>
@@ -116,7 +80,7 @@ defineExpose({
                 default-view="Months"
                 :mask="mask"
                 v-model="timePickedStart"
-                @update:model-value="emitTimeRangeChanged"
+                @update:model-value="timeRangeChanged"
               >
                 <div class="row items-center justify-end">
                   <q-btn v-close-popup :label="tc('close')" color="primary" flat />
@@ -132,7 +96,7 @@ defineExpose({
               transition-show="scale"
               transition-hide="scale"
             >
-              <q-time v-model="timePickedStart" :mask="mask" format24h @update:model-value="emitTimeRangeChanged">
+              <q-time v-model="timePickedStart" :mask="mask" format24h @update:model-value="timeRangeChanged">
                 <div class="row items-center justify-end">
                   <q-btn v-close-popup :label="tc('close')" color="primary" flat />
                 </div>
@@ -163,7 +127,7 @@ defineExpose({
                 default-view="Months"
                 :mask="mask"
                 v-model="timePickedEnd"
-                @update:model-value="emitTimeRangeChanged"
+                @update:model-value="timeRangeChanged"
               >
                 <div class="row items-center justify-end">
                   <q-btn v-close-popup :label="tc('close')" color="primary" flat />
@@ -179,7 +143,7 @@ defineExpose({
               transition-show="scale"
               transition-hide="scale"
             >
-              <q-time v-model="timePickedEnd" :mask="mask" format24h @update:model-value="emitTimeRangeChanged">
+              <q-time v-model="timePickedEnd" :mask="mask" format24h @update:model-value="timeRangeChanged">
                 <div class="row items-center justify-end">
                   <q-btn v-close-popup :label="tc('close')" color="primary" flat />
                 </div>

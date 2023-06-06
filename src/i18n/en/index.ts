@@ -15,5 +15,7 @@ export default {
   close: 'Close',
   // 拓扑图页
   topoDgm: 'Topology Diagram',
-  sysOverview: 'System Overview'
+  sysOverview: 'System Overview',
+  expand: 'Expand',
+  shrink: 'Shrink'
 }
