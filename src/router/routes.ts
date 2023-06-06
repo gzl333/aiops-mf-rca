@@ -1,18 +1,24 @@
 import { RouteRecordRaw } from 'vue-router'
+// 根因定位
+const MainLayout = () => import('layouts/MainLayout.vue')
+const MonitorUnit = () => import('pages/MonitorUnit.vue') // 监控单元
+const Topological = () => import('pages/TopologicalPage.vue') // 拓扑图
 
 const routes: RouteRecordRaw[] = [
   {
     path: '/my/rca',
-    component: () => import('layouts/MainLayout.vue'),
-    redirect: '/my/rca/service1',
+    component: MainLayout,
+    redirect: '/my/rca/topological',
     children: [
       {
-        path: 'service1',
-        component: () => import('pages/Service1Page.vue')
+        path: 'topological',
+        name: 'topological',
+        component: Topological
       },
       {
-        path: 'service2',
-        component: () => import('pages/Service2Page.vue')
+        path: 'monitorUnit',
+        name: 'monitorUnit',
+        component: MonitorUnit
       }
     ]
   },

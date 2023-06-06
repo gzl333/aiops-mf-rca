@@ -2,8 +2,9 @@
 
 import aiops from 'src/api/aiops'
 import service from 'src/api/service'
-
+import mail from './mail/index'
 export default {
   aiops,
-  service
+  service,
+  ...mail
 }

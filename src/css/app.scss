@@ -96,3 +96,156 @@
   background-color: white !important;
   width: 600px;
 }
+// app global css in SCSS form
+@import url('./reset.css');
+
+// aiops平台配色方案
+$aiops-primary   : #0090FF;
+$aiops-secondary : #FFAC33;
+$aiops-accent    : #28AAE1;
+
+$aiops-dark      : #09153D;
+
+$aiops-positive  : #21BA45;
+$aiops-negative  : #FC5531;
+$aiops-info      : #28AAE1;
+$aiops-warning   : #F2C037;
+
+$aiops-hover-primary: #e3f2fd;
+
+$aiops-sub-font  : #223b53;
+$aiops-border: #eff0f4;
+$aiops-btn-border: #dcdfe6;
+
+// 字体
+@font-face {
+  font-family: alimama;
+  src: url(../assets/fonts/alimama/Alimama_ShuHeiTi_Bold.woff);
+}
+
+.color-primary {
+  color: $aiops-primary
+}
+
+.color-secondary {
+  color: $aiops-secondary
+}
+
+.color-accent {
+  color: $aiops-accent
+}
+
+.color-dark {
+  color: $aiops-dark
+}
+
+.color-bg-dark {
+  background-color: $aiops-dark
+}
+
+.color-positive {
+  color: $aiops-positive
+}
+
+.color-negative {
+  color: $aiops-negative
+}
+
+.color-info {
+  color: $aiops-info
+}
+
+.color-warning {
+  color: $aiops-warning
+}
+
+.color-sub-font {
+  color: $aiops-sub-font
+}
+
+.box-shadow-primary {
+  box-shadow: rgba(233, 241, 250, 0.9) 5px 0px 10px 4px
+}
+
+.width-100 {
+  width: 100%;
+}
+
+.height-100 {
+  height: 100%;
+}
+
+.font-size-14 {
+  font-size: 14px;
+}
+
+.font-size-16 {
+  font-size: 16px;
+}
+
+.font-size-18 {
+  font-size: 18px;
+}
+
+.ellipsis {
+  white-space: nowrap; /* 防止换行 */
+  overflow: hidden; /* 超出部分隐藏 */
+  text-overflow: ellipsis; /* 显示省略号 */
+}
+
+$aiops-colors: (
+  aiops-primary: #0090FF,
+  aiops-secondary: #FFAC33,
+  aiops-accent: #28AAE1,
+  aiops-dark: #09153D,
+  aiops-positive: #21BA45,
+  aiops-negative: #FC5531,
+  aiops-info: #28AAE1,
+  aiops-warning: #F2C037,
+  aiops-sub-font: #223b53,
+  aiops-border: #eff0f4,
+  aiops-btn-border: #dcdfe6,
+  aiops-hover-primary: #e3f2fd
+);
+
+$aiops-radius: (
+  xs-radius: 2px,
+  sm-radius: 4px,
+  md-radius: 6px,
+  lg-radius: 8px
+);
+
+@each $colorKey, $colorValue in $aiops-colors {
+  .text-#{$colorKey} {
+    color: $colorValue;
+  }
+
+  .bg-#{$colorKey} {
+    background: $colorValue;
+  }
+
+  @each $radiusKey, $radiusValue in $aiops-radius {
+    .bd-#{$radiusKey}-#{$colorKey} {
+      border-radius: $radiusValue;
+      border: 1px solid $colorValue;
+    }
+  }
+}
+
+
+.text-subtitle1 {
+  line-height: 1.5rem;
+}
+
+.q-card__actions {
+  padding: 12px;
+}
+
+.q-btn--outline:before {
+  border-color: $aiops-btn-border;
+}
+
+.q-tabs--dense .q-tab {
+  min-height: 32px;
+}
+

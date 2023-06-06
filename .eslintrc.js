@@ -116,5 +116,7 @@ module.exports = {
     '@typescript-eslint/restrict-plus-operands': 'off',
     '@typescript-eslint/unbound-method': 'off',
     '@typescript-eslint/restrict-template-expressions': 'off',
+    '@typescript-eslint/no-unused-vars': 'off',
+    "@typescript-eslint/no-explicit-any": 'off'
   }
 }

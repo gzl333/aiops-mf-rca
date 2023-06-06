@@ -152,7 +152,9 @@ module.exports = configure(function (ctx) {
           ...cfg.resolve.alias, // This adds the existing alias
           // Add your own alias like this
           api: resolve(__dirname, './src/api'),
-          composables: resolve(__dirname, './src/composables')
+          composables: resolve(__dirname, './src/composables'),
+          stores: resolve(__dirname, './src/stores'),
+          css: resolve(__dirname, './src/css')
         }
       }
     },
@@ -169,6 +171,14 @@ module.exports = configure(function (ctx) {
         'Access-Control-Allow-Origin': '*',
         'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, PATCH, OPTIONS',
         'Access-Control-Allow-Headers': 'X-Requested-With, content-type, Authorization'
+      },
+      client: {
+        webSocketURL: {
+          hostname: 'localhost',
+          pathname: '/ws',
+          port: defaultPort,
+          protocol: 'http'
+        }
       }
     },
 

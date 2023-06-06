@@ -1,5 +1,5 @@
 import { boot } from 'quasar/wrappers'
-import axios, { AxiosInstance, AxiosError } from 'axios'
+import axios, { AxiosInstance, AxiosError, AxiosRequestConfig } from 'axios'
 import qs from 'qs'
 
 // @ts-expect-error
@@ -9,6 +9,18 @@ declare module '@vue/runtime-core' {
   interface ComponentCustomProperties {
     $axios: AxiosInstance;
   }
+}
+
+// 解决axios返回数据获取时报错：类型“AxiosResponse<any, any>”上不存在属性“xxxxx”
+declare module 'axios' {
+  interface AxiosResponse<T = any> {
+    // 这里追加你的参数
+    count: number
+    next: null
+    previous: null
+    results: any[]
+  }
+  export function create(config?: AxiosRequestConfig): AxiosInstance;
 }
 
 // axios instance with base url configured
@@ -32,7 +44,7 @@ axiosAiops.interceptors.request.use(config => {
   return Promise.reject(error)
 })
 axiosAiops.interceptors.response.use(config => {
-  return config
+  return config.data
 }, (error: AxiosError) => {
   return Promise.reject(error)
 })

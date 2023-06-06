@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { ref, computed } from 'vue'
 import { navigateToUrl } from 'single-spa'
 import { useStore } from 'stores/store'
 // import { useRoute, useRouter } from 'vue-router'
 import { i18n } from 'boot/i18n'
+import MyDrawer from 'components/common/MyDrawer.vue'
 
 // const props = defineProps({
 //   foo: {
@@ -23,86 +24,44 @@ const activeItem = computed(() => store.items.currentPath[0])
 
 const appVersion = process.env.appVersion
 const releaseTime = process.env.releaseTime
-
+const navList = ref([
+  {
+    name: 'monitorU',
+    icon: 'filter_center_focus',
+    path: '/my/rca/monitorUnit',
+    pathName: 'monitorUnit'
+  },
+  {
+    name: 'topo',
+    icon: 'bubble_chart',
+    path: '/my/rca/topological',
+    pathName: 'topological'
+  }
+])
 </script>
 
 <template>
-  <q-layout view="hHh LpR fFf">
-
-    <q-drawer :model-value="true" style="padding-top: 60px;" :breakpoint="0" side="left" width="120" bordered>
-
-      <div class="column full-height bg-grey-2">
-        <q-scroll-area class="col non-selectable" visible>
-
-          <q-list>
-
-            <q-item>
-              <q-item-section class="column items-center q-py-sm text-center text-weight-bold text-grey-8">
-                {{ tc('根因定位') }}
-              </q-item-section>
-            </q-item>
-
-            <q-item
-              clickable
-              :active="activeItem === 'service1'"
-              @click="navigateToUrl('/my/rca/service1')"
-              active-class="active-item"
-            >
-              <q-item-section class="column items-center">
-                <q-icon name="las la-video" size="lg"/>
-                <div class="active-text text-center">{{ tc('服务1') }}</div>
-              </q-item-section>
-            </q-item>
-
-            <q-item
-              clickable
-              :active="activeItem === 'service2'"
-              @click="navigateToUrl('/my/rca/service2')"
-              active-class="active-item"
-            >
-              <q-item-section class="column items-center">
-                <q-icon name="las la-server" size="lg"/>
-                <div class="active-text text-center">{{ tc('服务2') }}</div>
-              </q-item-section>
-            </q-item>
-
-          </q-list>
-
-          <div class="row justify-center q-pt-lg">
-            <q-icon class="text-center" name="info" color="grey-4" size="xs">
-              <q-tooltip class="bg-grey-3">
-                <div class="text-grey text-caption text-center">{{ tc('appVersion') }}</div>
-                <div class="text-grey text-caption text-center">
-                  {{ appVersion }}
-                </div>
-
-                <div class="text-grey text-caption text-center">{{ tc('releaseTime') }}</div>
-                <div class="text-grey text-caption text-center">
-                  {{ new Date(releaseTime).toLocaleString(i18n.global.locale as string) }}
-                </div>
-              </q-tooltip>
-            </q-icon>
-          </div>
-
-        </q-scroll-area>
-      </div>
-    </q-drawer>
+  <q-layout view="hHh LpR fFf" >
+    <my-drawer
+    style="margin-top: 60px;"
+      :nav-list="navList"
+    ></my-drawer>
 
     <q-page-container>
-      <q-scroll-area style="height: 100vh;">
-        <router-view/>
-      </q-scroll-area>
+      <div class="main">
+        <router-view :key="$route.fullPath" />
+      </div>
     </q-page-container>
 
   </q-layout>
 </template>
 
 <style lang="scss" scoped>
-.active-item {
-  background-color: #DBF0FC; // $grey-4;
-
-  .active-text {
-    color: $primary;
-  }
+.main {
+  margin: 16px;
+  background: white;
+  width: 100%;
+  height: calc(100vh - 82px);
+  box-shadow: rgba(233, 241, 250 ,0.9) 5px 0px 10px 4px;
 }
 </style>
