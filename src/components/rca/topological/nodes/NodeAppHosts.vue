@@ -176,11 +176,15 @@ watch(() => currentHost.value, async (val) => {
   }
 })
 
-watch(() => hostType.value, async (val, oldVal) => {
-  tab.value = 'source'
+watch(() => hostType.value, async (val) => {
+  if (val === 'host') {
+    tab.value = ''
+    await nextTick()
+    tab.value = 'source'
+  }
 })
 
-watch(() => tab.value, async (val, oldVal) => {
+watch(() => tab.value, async (val) => {
   switch (val) {
     case 'performance':
       await nextTick()
@@ -252,13 +256,13 @@ defineExpose({ show, hidden })
           :options="hostOptions"
         />
 
-        <div class="q-px-xs">
+        <!-- 主机展示时序信息，Tomcat，nginx展示日志 -->
+        <div class="q-px-xs" v-if="hostType === 'host'">
           <q-option-group
             v-model="tab"
             inline
             :options="tabOptions"
           />
-          <!-- 现阶段主机，Tomcat，nginx的指标展示内容一致 -->
           <q-scroll-area style="height: 400px">
             <q-tab-panels v-model="tab">
 
@@ -280,13 +284,16 @@ defineExpose({ show, hidden })
             </q-tab-panels>
           </q-scroll-area>
         </div>
+        <div class="q-px-xs" v-if="hostType === 'nginx'">
+          nginx日志
+        </div>
+        <div class="q-px-xs" v-if="hostType === 'tomcat'">
+          tomcat日志
+        </div>
       </template>
 
       <template #actions>
         <q-btn padding="4px 14px" outline style="color: #606266;" label="关闭" v-close-popup />
-
-        <!-- <q-btn outline padding="4px 14px" style="color: #606266;" label="关闭" v-close-popup /> -->
-        <!-- <q-btn padding="4px 14px" unelevated color="aiops-primary" label="查看详情" to="/my/rca/monitorUnit" v-close-popup /> -->
       </template>
     </my-dialog>
 
