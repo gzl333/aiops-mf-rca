@@ -5,18 +5,14 @@ import { ref, reactive, computed, withDefaults, onMounted, nextTick, watch } fro
 // import { useStore } from 'stores/store'
 // import { useRoute } from 'vue-router'
 import { date } from 'quasar'
-import { useRouter } from 'vue-router'
+import { navigateToUrl } from 'single-spa'
 
 import MyDialog from 'components/common/MyDialog.vue'
 import PerformanceChart from '../dbTab/PerformanceChart.vue'
 import SourceChart from '../dbTab/SourceChart.vue'
 import ErrorInfo from '../ErrorInfo.vue'
 
-const router = useRouter()
-const useToRoute = (path: string) => {
-  router.push({ path })
-}
-
+const appPath = process.env.appPath as string
 // const { t } = useI18n()
 
 // const props = defineProps({
@@ -229,7 +225,7 @@ defineExpose({ show, hidden })
               <p>19天</p>
             </div>
             <div class="row col-5">
-              <label class="text-aiops-primary cursor-pointer" @click="useToRoute('/my/rca/monitorUnit')" v-close-popup>查看详情</label>
+              <label class="text-aiops-primary cursor-pointer" @click="navigateToUrl(appPath + '/monitorUnit')" v-close-popup>查看详情</label>
             </div>
           </div>
         </div>

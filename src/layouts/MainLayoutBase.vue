@@ -14,6 +14,7 @@ import { i18n } from 'boot/i18n'
 // })
 // const emits = defineEmits(['change', 'delete'])
 
+const appPath = process.env.appPath as string
 const store = useStore()
 // const router = useRouter()
 // const route = useRoute()
@@ -45,7 +46,7 @@ const releaseTime = process.env.releaseTime
             <q-item
               clickable
               :active="activeItem === 'monitorUnit'"
-              @click="navigateToUrl('/my/rca/monitorUnit')"
+              @click="navigateToUrl(appPath + '/monitorUnit')"
               active-class="active-item"
             >
               <q-item-section class="column items-center">
@@ -57,7 +58,7 @@ const releaseTime = process.env.releaseTime
             <q-item
               clickable
               :active="activeItem === 'topological'"
-              @click="navigateToUrl('/my/rca/topological')"
+              @click="navigateToUrl(appPath + '/topological')"
               active-class="active-item"
             >
 

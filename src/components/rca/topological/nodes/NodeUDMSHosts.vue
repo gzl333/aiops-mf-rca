@@ -3,7 +3,8 @@
 import { ref, reactive, nextTick, watch } from 'vue'
 import { useStore } from 'stores/rca/topological'
 import { storeToRefs } from 'pinia'
-import { useRouter } from 'vue-router'
+import { navigateToUrl } from 'single-spa'
+
 import { udmsHost } from '../topologicalCmptData/nodes'
 
 import MyDialog from 'components/common/MyDialog.vue'
@@ -12,11 +13,7 @@ import SourceChart from '../hostTab/SourceChart.vue'
 import NetChart from '../hostTab/NetChart.vue'
 import ErrorInfo from '../ErrorInfo.vue'
 
-const router = useRouter()
-const useToRoute = (path: string) => {
-  router.push({ path })
-}
-
+const appPath = process.env.appPath as string
 const store = useStore()
 const { currentBusiness, nodeInfo } = storeToRefs(store)
 
@@ -185,8 +182,8 @@ defineExpose({ show, hidden })
         <div class="q-px-xs q-my-sm ">
           <span class="text-bold">{{ currentHost.ip }}({{ currentHost.label }})：</span>
           <span class="text-aiops-primary cursor-pointer" @click="showError">告警</span>
-          <span class="text-aiops-primary cursor-pointer q-pl-md" @click="useToRoute('/my/rca/monitorUnit')" v-close-popup>日志</span>
-          <span class="text-aiops-primary cursor-pointer q-pl-md" @click="useToRoute('/my/rca/monitorUnit')" v-close-popup>详情</span>
+          <span class="text-aiops-primary cursor-pointer q-pl-md" @click="navigateToUrl(appPath + '/monitorUnit')" v-close-popup>日志</span>
+          <span class="text-aiops-primary cursor-pointer q-pl-md" @click="navigateToUrl(appPath + '/monitorUnit')" v-close-popup>详情</span>
 
         </div>
 

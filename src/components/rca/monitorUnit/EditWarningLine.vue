@@ -5,14 +5,8 @@ import { ref, reactive, computed, withDefaults, onMounted, nextTick, watch } fro
 // import { useStore } from 'stores/store'
 // import { useRoute } from 'vue-router'
 import { date } from 'quasar'
-import { useRouter } from 'vue-router'
 
 import MyDialog from 'components/common/MyDialog.vue'
-
-const router = useRouter()
-const useToRoute = (path: string) => {
-  router.push({ path })
-}
 
 // const { t } = useI18n()
 
