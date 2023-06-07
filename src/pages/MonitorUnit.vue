@@ -41,7 +41,7 @@ const unitOps = reactive([
   },
   {
     label: 'F5负载均衡',
-    value: 'balancer'
+    value: 'load_balance'
   },
   {
     label: 'VPN',
@@ -53,11 +53,11 @@ const unitOps = reactive([
   },
   {
     label: 'Nginx',
-    value: 'os'
+    value: 'nginx'
   },
   {
     label: 'MySQL',
-    value: 'db'
+    value: 'mysql'
   }
 ])
 

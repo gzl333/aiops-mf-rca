@@ -156,7 +156,7 @@ defineExpose({ show, hidden })
               <p>19天</p>
             </div>
             <div class="row col-5">
-              <label class="text-aiops-primary cursor-pointer" @click="useToRoute('/location/monitorUnit')" v-close-popup>查看详情</label>
+              <label class="text-aiops-primary cursor-pointer" @click="useToRoute('/my/rca/monitorUnit')" v-close-popup>查看详情</label>
             </div>
           </div>
         </div>

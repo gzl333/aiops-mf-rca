@@ -179,7 +179,7 @@ defineExpose({ show, hidden })
 
       <template #actions>
         <q-btn flat color="primary" label="关闭" v-close-popup />
-        <q-btn unelevated color="aiops-primary" label="查看详情" to="/location/monitorUnit" v-close-popup />
+        <q-btn unelevated color="aiops-primary" label="查看详情" to="/my/rca/monitorUnit" v-close-popup />
       </template>
     </my-dialog>
   </div>

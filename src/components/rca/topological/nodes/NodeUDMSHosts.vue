@@ -185,8 +185,8 @@ defineExpose({ show, hidden })
         <div class="q-px-xs q-my-sm ">
           <span class="text-bold">{{ currentHost.ip }}({{ currentHost.label }})：</span>
           <span class="text-aiops-primary cursor-pointer" @click="showError">告警</span>
-          <span class="text-aiops-primary cursor-pointer q-pl-md" @click="useToRoute('/location/monitorUnit')" v-close-popup>日志</span>
-          <span class="text-aiops-primary cursor-pointer q-pl-md" @click="useToRoute('/location/monitorUnit')" v-close-popup>详情</span>
+          <span class="text-aiops-primary cursor-pointer q-pl-md" @click="useToRoute('/my/rca/monitorUnit')" v-close-popup>日志</span>
+          <span class="text-aiops-primary cursor-pointer q-pl-md" @click="useToRoute('/my/rca/monitorUnit')" v-close-popup>详情</span>
 
         </div>
 
@@ -224,7 +224,7 @@ defineExpose({ show, hidden })
         <q-btn padding="4px 14px" outline style="color: #606266;" label="关闭" v-close-popup />
 
         <!-- <q-btn outline padding="4px 14px" style="color: #606266;" label="关闭" v-close-popup /> -->
-        <!-- <q-btn padding="4px 14px" unelevated color="aiops-primary" label="查看详情" to="/location/monitorUnit" v-close-popup /> -->
+        <!-- <q-btn padding="4px 14px" unelevated color="aiops-primary" label="查看详情" to="/my/rca/monitorUnit" v-close-popup /> -->
       </template>
     </my-dialog>
 

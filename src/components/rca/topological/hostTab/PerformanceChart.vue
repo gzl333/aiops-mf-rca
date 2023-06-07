@@ -1,6 +1,6 @@
 <!-- 性能组件 -->
 <script setup lang="ts">
-import { ref, withDefaults, nextTick, reactive, watch } from 'vue'
+import { ref, nextTick, reactive, watch } from 'vue'
 import { lineData } from 'components/common/myctline'
 
 import { useStore } from 'stores/rca/topological'

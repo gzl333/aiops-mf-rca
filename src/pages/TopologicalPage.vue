@@ -193,7 +193,7 @@ const drawerRight = ref(true)
           text-color="white"
           dense
           unelevated
-          :title="drawerRight? tc('Shrink') : tc('Expand')"
+          :title="drawerRight? tc('shrink') : tc('expand')"
           :icon="drawerRight? 'chevron_right' : 'chevron_left'"
           @click="drawerRight = !drawerRight, topoCmpt.resetContainer()"
         />

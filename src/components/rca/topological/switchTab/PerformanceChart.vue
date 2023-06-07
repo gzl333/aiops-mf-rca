@@ -1,58 +1,15 @@
 <!-- 性能组件 -->
 <script setup lang="ts">
-import { ref, withDefaults, nextTick, reactive, watch } from 'vue'
+import { ref, nextTick, reactive, watch } from 'vue'
 import { lineData } from 'components/common/myctline'
+import { useStore } from 'stores/rca/topological'
+import { storeToRefs } from 'pinia'
 
 import MyCtLine from 'components/common/MyCtLine.vue'
 import MyCtGauge from 'components/common/MyCtGauge.vue'
 
-// const { t } = useI18n()
-
-// const props = defineProps({
-//   foo: {
-//     type: String,
-//     required: false,
-//     default: ''
-//   }
-// })
-// const emits = defineEmits(['change', 'delete'])
-
-// const store = useStore()
-// const route = userRoute()
-interface Params {
-  style: {
-    width?: number
-    height?: number
-    [propName: string]: any
-  },
-  info: {
-    data: any
-    [propName: string]: any
-  },
-  [propName: string]: any
-}
-
-interface Props {
-  params?: Params
-  idName?: string
-  activeId?: string
-}
-
-const props = withDefaults(defineProps<Props>(), {
-  params: () => {
-    return {
-      style: {
-        width: 400,
-        height: 300
-      },
-      info: {
-        data: [{ value: 5.6 }]
-      }
-    }
-  },
-  idName: 'c',
-  activeId: 'activeId'
-})
+const store = useStore()
+const { nodeInfo } = storeToRefs(store)
 
 const requestRef = ref()
 const responseTimeRef = ref()
