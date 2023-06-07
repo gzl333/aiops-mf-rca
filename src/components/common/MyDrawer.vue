@@ -4,6 +4,9 @@ import { ref, watch, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useStore } from 'stores/store'
 import { i18n } from 'boot/i18n'
+import { navigateToUrl } from 'single-spa'
+
+import { logs } from 'src/configs/logs'
 
 const tc = i18n.global.tc
 const router = useRouter()
@@ -28,8 +31,10 @@ const props = withDefaults(defineProps<Props>(), {
 const active = ref()
 const activeItem = computed(() => store.items.currentPath[0])
 
-const appVersion = process.env.appVersion
-const releaseTime = process.env.releaseTime
+const appPath = process.env.appPath as string
+const releaseTime = process.env.releaseTime as string
+const appVersion = logs[0].version
+
 watch(() => router.currentRoute.value.path, (val) => {
   active.value = val
 },
@@ -75,7 +80,11 @@ watch(() => router.currentRoute.value.path, (val) => {
       </q-list>
       <!-- 发布版本信息 -->
       <div class="row justify-center q-pt-sm">
-        <q-icon class="text-center" name="info" color="grey-4" size="xs">
+        <q-icon class="text-center cursor-pointer"
+                name="info"
+                size="xs"
+                :color="activeItem === 'about' ? 'primary' : 'grey-4'"
+                @click="navigateToUrl(appPath + '/about')">
           <q-tooltip class="bg-grey-3">
             <div class="text-grey text-caption text-center">{{ tc('appVersion') }}</div>
             <div class="text-grey text-caption text-center">

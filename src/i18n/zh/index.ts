@@ -4,7 +4,7 @@ export default {
   error: '错误',
   goBack: '返回',
   appVersion: '应用版本',
-  releaseTime: '发布时间',
+  releaseTime: '编译时间',
   // 菜单模块
   monitor: '监控',
   monitorU: '监控单元',

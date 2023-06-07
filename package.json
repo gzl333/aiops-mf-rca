@@ -3,6 +3,7 @@
   "name": "@cnic/rca",
   "appId": "rca",
   "defaultPort": 9020,
+  "appPath": "/my/rca",
   "description": "Micro Frontend",
   "productName": "Micro Frontend",
   "author": "mimas",

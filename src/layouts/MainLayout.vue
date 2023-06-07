@@ -6,6 +6,8 @@ import { useStore } from 'stores/store'
 import { i18n } from 'boot/i18n'
 import MyDrawer from 'components/common/MyDrawer.vue'
 
+import { logs } from 'src/configs/logs'
+
 // const props = defineProps({
 //   foo: {
 //     type: String,
@@ -22,19 +24,21 @@ const tc = i18n.global.tc
 
 const activeItem = computed(() => store.items.currentPath[0])
 
-const appVersion = process.env.appVersion
-const releaseTime = process.env.releaseTime
+const appPath = process.env.appPath as string
+const releaseTime = process.env.releaseTime as string
+const appVersion = logs[0].version
+
 const navList = ref([
   {
     name: 'monitorU',
     icon: 'filter_center_focus',
-    path: '/my/rca/monitorUnit',
+    path: appPath + '/monitorUnit',
     pathName: 'monitorUnit'
   },
   {
     name: 'topo',
     icon: 'bubble_chart',
-    path: '/my/rca/topological',
+    path: appPath + '/topological',
     pathName: 'topological'
   }
 ])

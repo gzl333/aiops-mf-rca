@@ -4,7 +4,7 @@ export default {
   error: 'Error',
   goBack: 'Go Back',
   appVersion: 'App Version',
-  releaseTime: 'Release Time',
+  releaseTime: 'Compile Time',
   // 菜单模块
   monitor: 'Monitor',
   monitorU: 'Monitor Unit',
