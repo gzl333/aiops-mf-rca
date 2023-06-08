@@ -1,6 +1,18 @@
 // 更新日志内容，版本降序排列
 export const logs = [
   {
+    version: 'v0.0.4',
+    date: '2023-06-08',
+    time: '09:09:09',
+    release_author: 'yuumi',
+    updates: [
+      {
+        info: '项目迁移，修改路由方法',
+        commit_author: 'yuumi'
+      }
+    ]
+  },
+  {
     version: 'v0.0.3',
     date: '2023-06-07',
     time: '14:09:09',
