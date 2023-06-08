@@ -1,5 +1,5 @@
 {
-  "version": "v0.0.4",
+  "version": "0.0.5",
   "name": "@cnic/rca",
   "appId": "rca",
   "defaultPort": 9020,
