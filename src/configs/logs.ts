@@ -1,6 +1,18 @@
 // 更新日志内容，版本降序排列
 export const logs = [
   {
+    version: 'v0.0.5',
+    date: '2023-06-08',
+    time: '13:57:09',
+    release_author: 'yuumi',
+    updates: [
+      {
+        info: '1. 根因定位系统概览文案调整; <br> 2. 左侧菜单栏重写及跳转按钮路由变更; <br> 3. 隐藏业务系统选项。<br>变更提出：张海明； 技术支持：郭祖良',
+        commit_author: 'yuumi'
+      }
+    ]
+  },
+  {
     version: 'v0.0.4',
     date: '2023-06-08',
     time: '09:09:09',

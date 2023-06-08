@@ -109,8 +109,8 @@ defineExpose({ show, hidden })
         <div class="q-px-xs q-my-sm ">
           <span class="text-bold">{{ nodeInfo.ip }}({{ nodeInfo.label }})：</span>
           <span class="text-aiops-primary cursor-pointer" @click="showError">告警</span>
-          <span class="text-aiops-primary cursor-pointer q-pl-md" @click="navigateToUrl(appPath + '/monitorUnit')" v-close-popup>日志</span>
-          <span class="text-aiops-primary cursor-pointer q-pl-md" @click="navigateToUrl(appPath + '/monitorUnit')" v-close-popup>详情</span>
+          <span class="text-aiops-primary cursor-pointer q-pl-md" @click="navigateToUrl(appPath + '/mailSystem')" v-close-popup>日志</span>
+          <span class="text-aiops-primary cursor-pointer q-pl-md" @click="navigateToUrl(appPath + '/mailSystem')" v-close-popup>详情</span>
         </div>
 
         <q-separator class="q-mt-sm" color="aiops-border" />

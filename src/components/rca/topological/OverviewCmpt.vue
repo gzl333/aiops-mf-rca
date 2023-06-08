@@ -23,23 +23,23 @@ const tc = i18n.global.tc
 
 const overViewData = reactive({
   request: {
-    label: '请求数',
-    value: 1234,
+    label: '总设备数',
+    value: 93,
     alias: '',
     icon: 'settings_input_antenna'
   },
   successRate: {
-    label: '成功率',
-    value: '98%',
+    label: '设备正常数',
+    value: '87',
     alias: '',
     icon: 'done_all'
   },
-  response: {
-    label: '平均响应时间',
-    value: 340,
-    alias: 'ms',
-    icon: 'access_time'
-  },
+  // response: {
+  //   label: '平均响应时间',
+  //   value: 340,
+  //   alias: 'ms',
+  //   icon: 'access_time'
+  // },
   error: {
     label: '告警数',
     value: 32,
@@ -172,8 +172,8 @@ onMounted(async () => {
 
       <!-- 请求数，平均响应时间，告警数，未处理数 -->
       <div class="top-data row justify-between">
-        <div class="data-card row items-center" v-for="(item, index) in overViewData" :key="index">
-          <q-icon :name="item.icon" class="color-primary text-h5"></q-icon>
+        <div class="data-card row items-center q-px-md q-py-sm" v-for="(item, index) in overViewData" :key="index">
+          <q-icon :name="item.icon" class="color-primary text-h4 q-pr-sm"></q-icon>
           <div class="q-pl-xs">
             <p class="label">{{ item.label }}</p>
             <span class="data">{{ item.value }}</span>
@@ -185,11 +185,11 @@ onMounted(async () => {
       <!-- 告警等级统计， 处理状态统计 -->
       <statistics-chart ref="statisticsRef" class="q-mt-sm"></statistics-chart>
 
-      <!-- 域名登录成功top10 -->
+      <!-- 邮箱域访问top10 -->
       <div class="title row justify-between" style="margin-top: 5px;">
         <p class="text-weight-bold">
           <q-icon name="local_fire_department" class="text-aiops-secondary" style="font-size: 18px;"></q-icon>
-          域名登录成功 Top10
+          邮箱域访问 Top10
         </p>
       </div>
 
@@ -213,8 +213,8 @@ onMounted(async () => {
         </div>
       </div>
 
-      <!-- 操作系统信息 -->
-      <div class="sys-data row">
+      <!-- 操作系统信息 (这个是单个主机的信息，需删除)-->
+      <!-- <div class="sys-data row" >
         <div class="col-4">
           <div v-for="(item, index) in sysData" :key="index" class="row" style="padding: 10px 18px;">
             <q-icon :name="item.icon" class="color-primary text-h4"></q-icon>
@@ -229,7 +229,7 @@ onMounted(async () => {
         <div class="sys-chart col-8">
           <my-ct-column-bar ref="sysChartRef" :params="sysChartParams" idName="sysChart"></my-ct-column-bar>
         </div>
-      </div>
+      </div> -->
     </q-scroll-area>
   </div>
 </template>
@@ -246,7 +246,7 @@ onMounted(async () => {
   .top-data {
 
     .data-card {
-      padding: 6px 8px;
+      // padding: 6px 8px;
       border-radius: 6px;
       background: rgb(239, 240, 244);
 

@@ -9,6 +9,7 @@ export default {
   monitor: '监控',
   monitorU: '监控单元',
   topo: '拓扑图',
+  mailSys: '邮件系统',
   // 筛选组件
   business: '业务系统',
   timeSel: '时间选择',

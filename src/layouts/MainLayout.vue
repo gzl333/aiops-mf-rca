@@ -6,24 +6,30 @@ const appPath = process.env.appPath as string
 
 const navList = ref([
   {
-    name: 'monitorU',
+    name: 'mailSys', // 邮件系统
+    icon: 'mail_outline',
+    path: appPath + '/mailSystem',
+    pathName: 'mailSystem'
+  },
+  {
+    name: 'monitorU', // 监控单元
     icon: 'filter_center_focus',
     path: appPath + '/monitorUnit',
     pathName: 'monitorUnit'
-  },
-  {
-    name: 'topo',
-    icon: 'bubble_chart',
-    path: appPath + '/topological',
-    pathName: 'topological'
   }
+  // {
+  //   name: 'topo', // 拓扑图
+  //   icon: 'bubble_chart',
+  //   path: appPath + '/topological',
+  //   pathName: 'topological'
+  // }
+
 ])
 </script>
 
 <template>
   <q-layout view="hHh LpR fFf" >
     <my-drawer
-    style="margin-top: 60px;"
       :nav-list="navList"
     ></my-drawer>
 

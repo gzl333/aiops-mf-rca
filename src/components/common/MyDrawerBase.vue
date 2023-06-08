@@ -25,7 +25,7 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  width: 120
+  width: 180
 })
 
 const active = ref()
@@ -45,45 +45,46 @@ watch(() => router.currentRoute.value.path, (val) => {
 
 <template>
   <q-drawer
-    style="padding-top: 60px;"
-    bordered
-    side="left"
+    class="q-mr-sm box-shadow-primary"
+    :model-value="true"
+    show-if-above
     :width="width"
     :breakpoint="0"
-    :model-value="true"
   >
-  <div class="column full-height bg-grey-2">
-    <q-scroll-area class="col non-selectable" visible>
-      <q-list>
+    <q-scroll-area class="height-100">
+      <q-list padding>
         <q-item>
-          <q-item-section class="column items-center q-py-sm text-center text-weight-bold text-grey-8">
+          <q-item-section class="column items-center q-py-sm text-center text-weight-bold text-aiops-primary">
             {{ tc('rca') }}
           </q-item-section>
         </q-item>
 
         <q-item
-          active-class="active-item"
           v-for="(item, index) in navList"
           :key="index"
           :clickable="active !== item.path"
+          v-ripple
           :active="active === item.path"
-          @click="navigateToUrl(item.path)"
+          :to="{name: item.pathName}"
+          @click="active = item.path"
         >
-          <q-item-section class="column items-center">
-            <q-icon :name="item.icon" size="lg"/>
-            <div class="active-text text-center">{{ tc(item.name) }}</div>
+          <q-item-section avatar style="min-width: auto;">
+            <q-icon :name="item.icon" />
+          </q-item-section>
+
+          <q-item-section>
+            {{ tc(item.name) }}
           </q-item-section>
         </q-item>
-      </q-list>
 
+      </q-list>
       <!-- 发布版本信息 -->
       <div class="row justify-center q-pt-sm">
         <q-icon class="text-center cursor-pointer"
-          name="info"
-          size="xs"
-          :color="activeItem === 'about' ? 'primary' : 'grey-4'"
-          @click="navigateToUrl(appPath + '/about')"
-        >
+                name="info"
+                size="xs"
+                :color="activeItem === 'about' ? 'primary' : 'grey-4'"
+                @click="navigateToUrl(appPath + '/about')">
           <q-tooltip class="bg-grey-3">
             <div class="text-grey text-caption text-center">{{ tc('appVersion') }}</div>
             <div class="text-grey text-caption text-center">
@@ -98,16 +99,9 @@ watch(() => router.currentRoute.value.path, (val) => {
         </q-icon>
       </div>
     </q-scroll-area>
-  </div>
+
   </q-drawer>
 </template>
 
 <style lang="scss" scoped>
-.active-item {
-  background-color: #DBF0FC; // $grey-4;
-
-  .active-text {
-    color: $primary;
-  }
-}
 </style>

@@ -5,24 +5,30 @@ const appPath = process.env.appPath as string
 
 // 根因定位
 const MainLayout = () => import('layouts/MainLayout.vue')
+const MailSystem = () => import('pages/MailSystem.vue')
 const MonitorUnit = () => import('pages/MonitorUnit.vue') // 监控单元
-const Topological = () => import('pages/TopologicalPage.vue') // 拓扑图
+// const Topological = () => import('src/pages/TopologicalBase.vue') // 拓扑图
 
 const routes: RouteRecordRaw[] = [
   {
     path: appPath,
     component: MainLayout,
-    redirect: appPath + '/topological',
+    redirect: appPath + '/mailSystem',
     children: [
-      {
-        path: 'topological',
-        name: 'topological',
-        component: Topological
-      },
+      // {
+      //   path: 'topological',
+      //   name: 'topological',
+      //   component: Topological
+      // },
       {
         path: 'monitorUnit',
         name: 'monitorUnit',
         component: MonitorUnit
+      },
+      {
+        path: 'mailSystem',
+        name: 'mailSystem',
+        component: MailSystem
       },
       // @mimas: about, updates, releases...
       {

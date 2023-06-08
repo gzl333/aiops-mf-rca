@@ -3,7 +3,7 @@
 import { ref, withDefaults, nextTick, watch } from 'vue'
 import { Chart } from '@antv/g2'
 // import $bus from 'src/hooks/bus'
-import { cpuUsageData } from 'components/rca/monitorUnit/chartTestData/host'
+import { cpuUsageData } from 'components/rca/mailSystem/chartTestData/host'
 interface Params {
   style: {
     width?: number

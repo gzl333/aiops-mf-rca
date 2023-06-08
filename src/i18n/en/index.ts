@@ -9,6 +9,7 @@ export default {
   monitor: 'Monitor',
   monitorU: 'Monitor Unit',
   topo: 'Topological',
+  mailSys: 'Mail System',
   // 筛选组件
   business: 'Business Systems',
   timeSel: 'Time Selection',

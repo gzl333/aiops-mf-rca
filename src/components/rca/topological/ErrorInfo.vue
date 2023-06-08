@@ -335,7 +335,7 @@ defineExpose({ show, hidden })
         <q-btn padding="4px 14px" outline style="color: #606266;" label="关闭" v-close-popup />
 
         <!-- <q-btn outline padding="4px 14px" style="color: #606266;" label="关闭" v-close-popup /> -->
-        <!-- <q-btn padding="4px 14px" unelevated color="aiops-primary" label="查看详情" to="/my/rca/monitorUnit" v-close-popup /> -->
+        <!-- <q-btn padding="4px 14px" unelevated color="aiops-primary" label="查看详情" to="/my/rca/mailSystem" v-close-popup /> -->
       </template>
     </my-dialog>
   </div>

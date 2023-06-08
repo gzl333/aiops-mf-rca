@@ -50,8 +50,9 @@ const changeTimeRange = (val: [string, string]) => {
 
 <template>
   <div class="SelectCmpt">
-    <div class="row justify-between">
-      <div class="row">
+    <div class="row justify-end">
+      <!-- 业务系统选择现阶段改为放在左侧菜单栏 2023-06-08 zhanghaiming -->
+      <!-- <div class="row">
         <label class="q-pr-sm q-pt-sm" for="business">{{ tc('business') }}</label>
         <q-select
           style="width: 240px"
@@ -64,7 +65,7 @@ const changeTimeRange = (val: [string, string]) => {
           @update:model-value="changeBusiness"
         >
         </q-select>
-      </div>
+      </div> -->
 
       <my-date-time-range
         :time-range="timeRange"
