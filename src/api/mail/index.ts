@@ -5,24 +5,6 @@ import { axiosAiops } from 'boot/axios'
 
 export default {
   mail: {
-    // 获取节点数据
-    getNodeMetric (params: {query: {
-      timestamp?: number,
-      timestamp__lte?: number,
-      timestamp__gte?: number,
-      timestamp_gt?: number,
-      timestamp_lt?: number,
-      instance: string,
-      ordering: string,
-      page?: number,
-      page_size?: number
-    }}) {
-      return axiosAiops({
-        method: 'get',
-        url: 'v1/mail/metric',
-        params: params.query
-      })
-    },
     // 获取实例
     getMailMachine (params: {query: {
         category?: string,
@@ -33,7 +15,7 @@ export default {
       }}) {
       return axiosAiops({
         method: 'get',
-        url: 'v1/mail/machine/',
+        url: 'v1/mail/machine',
         params: params.query
       })
     },
@@ -51,7 +33,39 @@ export default {
       }}) {
       return axiosAiops({
         method: 'get',
-        url: 'v1/mail/metric/',
+        url: 'v1/mail/metric',
+        params: params.query
+      })
+    },
+    // 获取日志数据
+    getMailLog (params: {query: {
+      timestamp?: number,
+      timestamp__lt?: number,
+      timestamp__gt?: number,
+      timestamp__gte?: number,
+      timestamp__lte?: number,
+      instance?: string,
+      ordering?: string,
+      page?: number,
+      page_size?: number,
+      log_source?: string
+    }}) {
+      return axiosAiops({
+        method: 'get',
+        url: 'v1/mail/log',
+        params: params.query
+      })
+    },
+    // 获取预警线
+    getMailMetricWarning (params: {query: {
+      instance?: string,
+      ordering?: string,
+      page?: number,
+      page_size?: number
+    }}) {
+      return axiosAiops({
+        method: 'get',
+        url: 'v1/mail/metric/warning',
         params: params.query
       })
     }

@@ -1,11 +1,12 @@
 <!-- 主机弹框 -->
 <script setup lang="ts">
 import { ref, reactive, nextTick, watch } from 'vue'
+import { QTableProps, date } from 'quasar'
 import { useStore } from 'stores/rca/topological'
 import { storeToRefs } from 'pinia'
 import { navigateToUrl } from 'single-spa'
 import { appHost, appNginx, appTomcat } from '../topologicalCmptData/nodes'
-
+import api from 'src/api'
 import MyDialog from 'components/common/MyDialog.vue'
 import PerformanceChart from '../hostTab/PerformanceChart.vue'
 import SourceChart from '../hostTab/SourceChart.vue'
@@ -18,7 +19,7 @@ const { currentBusiness, nodeInfo } = storeToRefs(store)
 
 const params = reactive({
   style: {
-    width: 550,
+    width: 650,
     maxWidth: '70vw',
     maxHeight: '100vh'
   },
@@ -26,7 +27,7 @@ const params = reactive({
     systemID: currentBusiness.value.value,
     type: 'node',
     elementID: nodeInfo.value.ip,
-    timeRange: [store.timestampGte, store.timestampLte],
+    timeRange: [store.startTime, store.endTime],
     title: '节点详情'
   }
 })
@@ -38,7 +39,7 @@ const clearState = () => {
 }
 
 const dialog = ref()
-const tab = ref('')
+const tab = ref<string>('')
 const tabOptions = ref([
   { label: '资源', value: 'source' },
   { label: '性能', value: 'performance' },
@@ -48,7 +49,7 @@ const performanceRef = ref()
 const sourceRef = ref()
 const netRef = ref()
 
-const hostType = ref('') // 当前类型 host，nginx，tomcat
+const hostType = ref<string>('') // 当前类型 host，nginx，tomcat
 const hostOptions = ref([
   {
     label: '主机',
@@ -65,6 +66,7 @@ interface HostInfo {
 }
 const ipLists = ref<HostInfo[]>([])
 
+// 为ip增加每个单元类型（host,nginx,tomcat）的运行状态state
 appHost.forEach((item, index) => {
   ipLists.value.push({
     ip: item.ip,
@@ -90,6 +92,134 @@ const currentHost = ref<HostInfo>({
   label: '',
   hostState: ''
 })
+
+interface LogInfo {
+  index?: number
+  time?: string
+  log_source?: string
+  logType?:string
+  text?: string
+  [propName: string]: any
+}
+const nginxRows = ref<LogInfo[]>([])
+const nginxLoading = ref<boolean>(true)
+const tomcatRows = ref<LogInfo[]>([])
+const tomcatLoading = ref<boolean>(true)
+const initialPagination = ref({
+  rowsPerPage: 10
+})
+const columns = ref<QTableProps['columns']>([
+  {
+    name: 'index',
+    label: '序号',
+    required: true,
+    align: 'left',
+    field: 'index'
+  },
+  {
+    name: 'time',
+    required: true,
+    label: '时间',
+    align: 'left',
+    field: row => row.time,
+    format: val => `${val}`,
+    sortable: true
+  },
+  {
+    name: 'log_source',
+    required: true,
+    label: '日志源',
+    align: 'left',
+    field: row => row.log_source,
+    format: val => `${val}`
+  },
+  {
+    name: 'logType',
+    align: 'left',
+    label: '日志类型',
+    field: 'logType',
+    format: val => '-'
+  },
+  {
+    name: 'text',
+    align: 'left',
+    label: '日志信息',
+    field: 'text',
+    sortable: false
+  }
+])
+
+/**
+ * @desc: 获取日志数据
+ * @return {*}
+ */
+const getMailLog = async (ip: string, source: string, type: string) => {
+  try {
+    switch (type) {
+      case 'nginx':
+        nginxRows.value = []
+        nginxLoading.value = true
+        break
+      case 'tomcat':
+        tomcatRows.value = []
+        tomcatLoading.value = true
+        break
+      default:
+        break
+    }
+    const { results } = await api.mail.getMailLog({
+      query: {
+        timestamp__gte: store.timestampGte * 1000000000,
+        timestamp__lte: store.timestampLte * 1000000000,
+        instance: ip,
+        log_source: source,
+        page: 1,
+        page_size: 10
+      }
+    })
+    results.length && results.forEach((item, index) => {
+      item.index = index + 1
+      item.time = date.formatDate(Math.round(item.timestamp / 1000000), 'YYYY-MM-DD HH:mm:ss')
+      item.logType = '-'
+    })
+    switch (type) {
+      case 'nginx':
+        nginxRows.value = results
+        nginxLoading.value = false
+        break
+      case 'tomcat':
+        tomcatRows.value = results
+        tomcatLoading.value = false
+        break
+      default:
+        break
+    }
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+const currentSource = ref<string>('') // 当前节点log_source值
+
+/**
+ * @desc: 获取节点信息，拿到log_source值，为获取日志接口提供参数
+ * @return {*}
+ */
+const getMailMachine = async (ip:string, type: string) => {
+  currentSource.value = ''
+  try {
+    const { results } = await api.mail.getMailMachine({
+      query: {
+        instance: ip,
+        category: type
+      }
+    })
+    currentSource.value = results[0].log_source
+    console.log('getMailMachine:', results)
+  } catch (error) {
+    console.log(error)
+  }
+}
 
 /**
  * @desc: 点击切换ip
@@ -163,8 +293,11 @@ watch(() => currentHost.value, async (val) => {
     }
 
     nodeInfo.value.ip = val.ip
+    // 变更当前ip,获取实例指标值及预警线
     await store.getMetric()
+    await store.getMetricWarning()
 
+    // 重置tab
     if (hostType.value !== 'host') {
       hostType.value = 'host'
     } else {
@@ -173,15 +306,36 @@ watch(() => currentHost.value, async (val) => {
   }
 })
 
+/**
+ * @desc: 监听选中的实例类型，主机则重置tab, nginx和tomcat则获取日志
+ * @return {*}
+ */
 watch(() => hostType.value, async (val) => {
-  if (val === 'host') {
-    tab.value = ''
-    await nextTick()
-    tab.value = 'source'
+  switch (val) {
+    case 'host':
+      tab.value = ''
+      await nextTick()
+      tab.value = 'source'
+      break
+    case 'nginx':
+      // 加await将两个请求方法变为同步，这样可按顺序获取实例返回值log_source（请求1）更新currentSource.value，
+      // currentSource.value最新值作为参数请求日志（请求2）
+      await getMailMachine(currentHost.value.ip, 'nginx')
+      getMailLog(currentHost.value.ip, currentSource.value, 'nginx')
+      break
+    case 'tomcat':
+      await getMailMachine(currentHost.value.ip, 'tomcat')
+      getMailLog(currentHost.value.ip, currentSource.value, 'tomcat')
+      break
+    default:
+      break
   }
-  // TODO nginx tomcat table
 })
 
+/**
+ * @desc: 监听主机内tab变化，控制组件渲染
+ * @return {*}
+ */
 watch(() => tab.value, async (val) => {
   switch (val) {
     case 'performance':
@@ -212,7 +366,7 @@ const errorParams = reactive({
     systemID: currentBusiness.value.value,
     type: 'node',
     elementID: nodeInfo.value.ip,
-    timeRange: [store.timestampGte, store.timestampLte],
+    timeRange: [store.startTime, store.endTime],
     title: '告警信息'
   }
 })
@@ -228,7 +382,8 @@ defineExpose({ show, hidden })
   <div class="NodeAppHosts">
     <my-dialog ref="dialog" :nodeParams="params" @clearState="clearState">
       <template #container>
-        <div class="q-px-xs row" style="max-height: 100px; overflow: auto;">
+        <p class="text-bold">子节点：</p>
+        <div class="q-px-xs row" style="max-height: 120px; overflow: auto;">
           <div v-for="(item, index) in ipLists" :key="index" class="col-6 row items-center q-pb-xs cursor-pointer" @click="checkIP(item)">
             <q-icon name="fiber_manual_record" color="aiops-positive" style="font-size:4px; padding-right: 4px;"></q-icon>
             <div class="ipAddress font-size-14">{{ item.ip }}({{ item.label }})</div>
@@ -240,8 +395,8 @@ defineExpose({ show, hidden })
         <div class="q-px-xs q-my-sm ">
           <span class="text-bold">{{ currentHost.ip }}({{ currentHost.label }})：</span>
           <span class="text-aiops-primary cursor-pointer" @click="showError">告警</span>
-          <span class="text-aiops-primary cursor-pointer q-pl-md" @click="navigateToUrl(appPath + '/mailSystem')" v-close-popup>日志</span>
-          <span class="text-aiops-primary cursor-pointer q-pl-md" @click="navigateToUrl(appPath + '/mailSystem')" v-close-popup>详情</span>
+          <span class="text-aiops-primary cursor-pointer q-pl-md" @click="navigateToUrl(appPath + '/monitorUnit')" v-close-popup>日志</span>
+          <span class="text-aiops-primary cursor-pointer q-pl-md" @click="navigateToUrl(appPath + '/monitorUnit')" v-close-popup>详情</span>
         </div>
 
         <q-btn-toggle
@@ -285,12 +440,87 @@ defineExpose({ show, hidden })
 
         <div class="q-px-xs" v-if="hostType === 'nginx'">
           <q-scroll-area style="height: 400px">
-            nginx日志
+            <q-table
+              class="my-sticky-header-table q-mt-sm"
+              row-key="name"
+              hide-bottom
+              flat
+              bordered
+              no-data-label="暂无数据"
+              :loading="nginxLoading"
+              :rows="nginxRows"
+              :table-header-style="{ backgroundColor: 'rgb(239, 240, 244)' }"
+              :columns="columns"
+              :pagination="initialPagination"
+            >
+              <template v-slot:body="props">
+                <q-tr :props="props">
+                  <q-td key="index" auto-width>
+                    {{ props.row.index }}
+                  </q-td>
+                  <q-td key="time" style="width: 100px; white-space: pre-wrap;">
+                    {{ props.row.time }}
+                  </q-td>
+                  <q-td key="log_source" auto-width>
+                    {{ props.row.log_source }}
+                  </q-td>
+                  <q-td key="logType" auto-width>
+                    {{ props.row.logType }}
+                    <!-- <q-chip v-show="props.row.logType === 'error'" square dense color="aiops-negative" text-color="white" :label="props.row.logType" />
+                    <q-chip v-show="props.row.logType !== 'error'" square dense :label="props.row.logType" /> -->
+                  </q-td>
+                  <q-td key="text" style="max-width: 100px; white-space: pre-wrap;">
+                    <div class="row wrap">
+                      {{ props.row.text }}
+                    </div>
+                  </q-td>
+                </q-tr>
+              </template>
+            </q-table>
+
+            <span class="float-right text-aiops-primary cursor-pointer q-pl-md" @click="navigateToUrl(appPath + '/monitorUnit')" v-close-popup>更多日志</span>
+
           </q-scroll-area>
         </div>
         <div class="q-px-xs" v-if="hostType === 'tomcat'">
           <q-scroll-area style="height: 400px">
-            tomcat日志
+            <q-table
+              class="my-sticky-header-table q-mt-sm"
+              row-key="name"
+              hide-bottom
+              flat
+              bordered
+              no-data-label="暂无数据"
+              :loading="tomcatLoading"
+              :rows="tomcatRows"
+              :table-header-style="{ backgroundColor: 'rgb(239, 240, 244)' }"
+              :columns="columns"
+              :pagination="initialPagination"
+            >
+              <template v-slot:body="props">
+                <q-tr :props="props">
+                  <q-td key="index" auto-width>
+                    {{ props.row.index }}
+                  </q-td>
+                  <q-td key="time" style="width: 50px; white-space: pre-wrap;">
+                    {{ props.row.time }}
+                  </q-td>
+                  <q-td key="log_source" auto-width>
+                    {{ props.row.log_source }}
+                  </q-td>
+                  <q-td key="logType" auto-width>
+                    {{ props.row.logType }}
+                    <!-- <q-chip v-show="props.row.logType === 'error'" square dense color="aiops-negative" text-color="white" :label="props.row.logType" />
+                    <q-chip v-show="props.row.logType !== 'error'" square dense :label="props.row.logType" /> -->
+                  </q-td>
+                  <q-td key="text" style="width: 100px; white-space: pre-wrap;">
+                    <div class="row wrap">
+                      {{ props.row.text }}
+                    </div>
+                  </q-td>
+                </q-tr>
+              </template>
+            </q-table>
           </q-scroll-area>
         </div>
       </template>
@@ -307,5 +537,18 @@ defineExpose({ show, hidden })
 <style lang="scss" scoped>
 .NodeAppHosts {
 
+  .my-sticky-header-table {
+    max-height: 300px;
+    height: 300px;
+
+    :deep(thead tr th){
+      position: sticky;
+      z-index: 1
+    }
+
+    :deep(thead tr:first-child th){
+      top: 0
+    }
+  }
 }
 </style>

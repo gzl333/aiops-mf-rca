@@ -1,6 +1,6 @@
 // 根因定位-拓扑图
 import { defineStore } from 'pinia'
-import { date, Notify } from 'quasar'
+import { date } from 'quasar'
 import api from 'src/api'
 interface LabelVal {
   label: string
@@ -48,6 +48,10 @@ interface LoadData {
   type: string
 }
 
+interface Warning {
+  [propName: string]: number | string
+}
+
 interface ChartData {
   source: {
     cpu: CPUData[]
@@ -57,11 +61,13 @@ interface ChartData {
   net: {
     bandwidth: BandwidthData[],
     flow: FlowData[],
-    socket: SocketData[]
+    socket: SocketData[],
+
   },
   performance: {
-    load: LoadData[]
-  }
+    load: LoadData[],
+  },
+  warning: Warning
 }
 
 interface State {
@@ -125,7 +131,9 @@ export const useStore = defineStore('topoStore', {
           },
           performance: {
             load: []
-          }
+          },
+          // 预警线
+          warning: {}
         }
       }
     }
@@ -166,7 +174,8 @@ export const useStore = defineStore('topoStore', {
           },
           performance: {
             load: []
-          }
+          },
+          warning: {}
         }
 
         results.forEach((item: any) => {
@@ -294,11 +303,43 @@ export const useStore = defineStore('topoStore', {
         } else {
           this.nodeInfo.chartData = data
         }
-      } catch (error:any) {
+      } catch (error) {
         console.log(error)
-        Notify.create({
-          message: error
-        })
+      }
+    },
+    /**
+     * @desc: 查询实例指标预警线
+     * @param {object} params
+     * @return {*}
+     */
+    async getMetricWarning (params?: { ip?: string }) {
+      try {
+        const { results } = await api.mail.getMailMetricWarning(
+          {
+            query: {
+              instance: params?.ip || this.nodeInfo.ip
+            }
+          }
+        )
+        console.log('results warning: ', results)
+        // 设置state中的预警线值
+        if (results.length) {
+          for (const key in results[0]) {
+            this.nodeInfo.chartData.warning[key] = results[0][key]
+          }
+        } else {
+          this.nodeInfo.chartData.warning = {}
+        }
+        // TODO 测试用数据，1.xxx段无数据，待删
+        // this.nodeInfo.chartData.warning =
+        //  {
+        //    instance: this.nodeInfo.ip,
+        //    cpu_rate: 50.0,
+        //    memory_used: 50.0,
+        //    disk_used: 50.0
+        //  }
+      } catch (error) {
+        console.log(error)
       }
     }
   }

@@ -19,7 +19,7 @@ interface Options {
 interface QueryParams {
   business: Options
   unit: Options
-  timeRange: [string, string]
+  timeRange: string[]
 }
 
 interface Props {

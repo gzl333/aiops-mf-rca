@@ -27,7 +27,7 @@ const params = reactive({
     systemID: currentBusiness.value.value,
     type: 'node',
     ip: nodeInfo.value.ip,
-    timeRange: [store.timestampGte, store.timestampLte],
+    timeRange: [store.startTime, store.endTime],
     title: '节点详情'
   }
 })
@@ -155,7 +155,7 @@ const errorParams = reactive({
     systemID: currentBusiness.value.value,
     type: 'node',
     ip: nodeInfo.value.ip,
-    timeRange: [store.timestampGte, store.timestampLte],
+    timeRange: [store.startTime, store.endTime],
     title: '告警信息'
   }
 })
@@ -182,8 +182,8 @@ defineExpose({ show, hidden })
         <div class="q-px-xs q-my-sm ">
           <span class="text-bold">{{ currentHost.ip }}({{ currentHost.label }})：</span>
           <span class="text-aiops-primary cursor-pointer" @click="showError">告警</span>
-          <span class="text-aiops-primary cursor-pointer q-pl-md" @click="navigateToUrl(appPath + '/mailSystem')" v-close-popup>日志</span>
-          <span class="text-aiops-primary cursor-pointer q-pl-md" @click="navigateToUrl(appPath + '/mailSystem')" v-close-popup>详情</span>
+          <span class="text-aiops-primary cursor-pointer q-pl-md" @click="navigateToUrl(appPath + '/monitorUnit')" v-close-popup>日志</span>
+          <span class="text-aiops-primary cursor-pointer q-pl-md" @click="navigateToUrl(appPath + '/monitorUnit')" v-close-popup>详情</span>
 
         </div>
 

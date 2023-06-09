@@ -14,7 +14,6 @@ const { nodeInfo } = storeToRefs(store)
 const cpuRef = ref()
 const memoryRef = ref()
 const diskRef = ref()
-
 const cpuParams = reactive({
   style: {
     width: 400,
@@ -43,7 +42,7 @@ const cpuParams = reactive({
         lineData: { // 数据同上面warningLine中的data
           usage: {
             label: '预警线', // 预警线名
-            value: 80, // 预警值
+            value: nodeInfo.value.chartData.warning?.cpu_rate || 80, // 预警值
             alias: '%' // 预警线单位
           }
         },
@@ -53,7 +52,7 @@ const cpuParams = reactive({
         filterData: {
           usage: {
             start: 100, // 小于当前值
-            end: 80 // 且大于当前值 的范围标红
+            end: nodeInfo.value.chartData.warning?.cpu_rate || 80 // 且大于当前值 的范围标红
           }
         }
       },
@@ -78,8 +77,8 @@ const memoryParams = reactive({
       },
       alias: 'GiB',
       scale: {
-        max: 1050,
-        min: 950
+        // max: 1050,
+        min: 0
       },
       annotation: {
         line: {
@@ -88,7 +87,7 @@ const memoryParams = reactive({
         lineData: {
           memory: {
             label: '预警线', // 预警线名
-            value: 1000, // 预警值
+            value: nodeInfo.value.chartData.warning?.memory_used || 1000, // 预警值
             alias: 'GiB' // 预警线单位
           }
         },
@@ -97,8 +96,8 @@ const memoryParams = reactive({
         },
         filterData: {
           memory: {
-            start: 1050, // 小于当前值，等于scale的max
-            end: 1000 // 且大于当前值 的范围标红
+            start: Number(nodeInfo.value.chartData.warning?.memory_used) * 1.05 || 1050, // 小于当前值，等于scale的max
+            end: nodeInfo.value.chartData.warning?.memory_used || 1000 // 且大于当前值 的范围标红
           }
         }
       },
@@ -120,7 +119,7 @@ const diskParams = reactive({
       color: 'type',
       alias: 'TiB',
       scale: {
-        max: 100,
+        // max: 100,
         min: 0
       },
       annotation: {
@@ -130,7 +129,7 @@ const diskParams = reactive({
         lineData: { // 数据同上面warningLine中的data
           usage: {
             label: '预警线', // 预警线名
-            value: 80, // 预警值
+            value: nodeInfo.value.chartData.warning?.disk_used || 80, // 预警值
             alias: 'TiB' // 预警线单位
           }
         },
@@ -139,8 +138,8 @@ const diskParams = reactive({
         },
         filterData: {
           usage: {
-            start: 100, // 小于当前值
-            end: 80 // 且大于当前值 的范围标红
+            start: Number(nodeInfo.value.chartData.warning?.disk_used) * 1.2 || 100, // 小于当前值
+            end: nodeInfo.value.chartData.warning?.disk_used || 80 // 且大于当前值 的范围标红
           }
         }
       },

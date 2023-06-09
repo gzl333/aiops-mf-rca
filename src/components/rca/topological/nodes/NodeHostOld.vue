@@ -33,7 +33,7 @@ interface NodeParams {
     systemID: string
     type: string
     elementID: string
-    timeRange: [string, string]
+    timeRange: string[]
     title: string
     [propName: string]: any
   },

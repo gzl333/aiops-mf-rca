@@ -36,7 +36,7 @@ interface NodeParams {
     systemID: string
     type: string
     elementID: string
-    timeRange: [string, string]
+    timeRange: string[]
     title: string
     [propName: string]: any
   },
@@ -225,7 +225,7 @@ defineExpose({ show, hidden })
               <p>19天</p>
             </div>
             <div class="row col-5">
-              <label class="text-aiops-primary cursor-pointer" @click="navigateToUrl(appPath + '/mailSystem')" v-close-popup>查看详情</label>
+              <label class="text-aiops-primary cursor-pointer" @click="navigateToUrl(appPath + '/monitorUnit')" v-close-popup>查看详情</label>
             </div>
           </div>
         </div>
