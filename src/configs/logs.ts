@@ -1,6 +1,18 @@
 // 更新日志内容，版本降序排列
 export const logs = [
   {
+    version: 'v0.0.6',
+    date: '2023-06-09',
+    time: '17:28:09',
+    release_author: 'yuumi',
+    updates: [
+      {
+        info: '1. 新增扑图内app主机中nginx,tomcat日志列表展示; <br> 2. 修复时间传参格式bug。 <br> 接口提供：庞文豪',
+        commit_author: 'yuumi'
+      }
+    ]
+  },
+  {
     version: 'v0.0.5',
     date: '2023-06-08',
     time: '13:57:09',
