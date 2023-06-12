@@ -1,6 +1,18 @@
 // 更新日志内容，版本降序排列
 export const logs = [
   {
+    version: 'v0.0.7',
+    date: '2023-06-12',
+    time: '16:48:09',
+    release_author: 'yuumi',
+    updates: [
+      {
+        info: '1. 接入交换机cpu使用率、平均使用率、每分钟流量数据； <br> 2. 接入防火墙cpu使用率数据。 <br> 接口提供：庞文豪',
+        commit_author: 'yuumi'
+      }
+    ]
+  },
+  {
     version: 'v0.0.6',
     date: '2023-06-09',
     time: '17:28:09',
