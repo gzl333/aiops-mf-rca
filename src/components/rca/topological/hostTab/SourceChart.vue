@@ -25,7 +25,7 @@ const cpuParams = reactive({
       padding: [30, 20, 25, 50],
       color: {
         type: 'type',
-        color: ['#0090FF']
+        color: ['#FC5531', '#21BA45', '#FFAC33', '#0090FF']
       },
       alias: '%',
       scale: {

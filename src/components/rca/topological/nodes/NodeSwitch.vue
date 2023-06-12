@@ -8,6 +8,7 @@ import { navigateToUrl } from 'single-spa'
 import MyDialog from 'components/common/MyDialog.vue'
 import SourceChart from '../switchTab/SourceChart.vue'
 import PortChart from '../switchTab/PortChart.vue'
+import NetChart from '../switchTab/NetChart.vue'
 import ErrorInfo from '../ErrorInfo.vue'
 
 const appPath = process.env.appPath as string
@@ -38,8 +39,9 @@ const clearState = () => {
 
 const dialog = ref()
 
-const tab = ref('source')
+const tab = ref('')
 const sourceRef = ref()
+const netRef = ref()
 const portRef = ref()
 
 const show = async () => {
@@ -69,6 +71,10 @@ watch(() => tab.value, async (val) => {
     case 'port':
       await nextTick()
       portRef.value.show()
+      break
+    case 'net':
+      await nextTick()
+      netRef.value.show()
       break
     default:
       break
@@ -125,6 +131,7 @@ defineExpose({ show, hidden })
             narrow-indicator
           >
             <q-tab name="source" label="资源" />
+            <q-tab name="net" label="网络" />
             <q-tab name="port" label="端口" />
           </q-tabs>
 
@@ -136,7 +143,10 @@ defineExpose({ show, hidden })
                 <!-- 平均cpu使用率 -->
                 <source-chart ref="sourceRef"></source-chart>
               </q-tab-panel>
-
+              <q-tab-panel name="net" style="padding: 12px 0">
+                <!-- 每分钟流量 -->
+                <net-chart ref="netRef"></net-chart>
+              </q-tab-panel>
               <q-tab-panel name="port" style="padding: 12px 0">
                 <!-- 端口 -->
                 <port-chart ref="portRef"></port-chart>

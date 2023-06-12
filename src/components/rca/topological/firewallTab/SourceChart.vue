@@ -3,9 +3,10 @@
 import { ref, nextTick, reactive, watch } from 'vue'
 import { useStore } from 'stores/rca/topological'
 import { storeToRefs } from 'pinia'
-
 import MyCtLine from 'components/common/MyCtLine.vue'
 import MyCtGauge from 'components/common/MyCtGauge.vue'
+
+// import MyCtRadialLine from 'components/common/MyCtRadialLine.vue'
 
 const store = useStore()
 const { nodeInfo } = storeToRefs(store)
@@ -39,18 +40,16 @@ let sumCPU = 0
 nodeInfo.value.chartData.source.cpu.forEach(item => {
   sumCPU += item.y1Value
 })
-avrCPU.value = Number((sumCPU / (nodeInfo.value.chartData.source.cpu.length * 10)).toFixed(2))
-
 const avrCPUParams = reactive({
   style: {
     width: 400,
-    height: 150
+    height: 180
   },
   info: {
-    title: '平均CPU使用率',
-    data: [ // 获取的数据，需要请求接口拿到（写在show方法中）
-      // 仪表盘
+    title: '',
+    data: [
       { value: avrCPU.value }
+      // { term: nodeInfo.value.ip, count: avrCPU.value }
     ],
     chart: {
       annotation: {
@@ -70,7 +69,7 @@ const CPURateParams = reactive({
     data: nodeInfo.value.chartData.source.cpu,
     chart: {
       position: 'xValue*y1Value',
-      padding: [30, 20, 25, 50],
+      padding: [30, 20, 30, 50],
       color: {
         type: 'type',
         color: ['#0090FF']
@@ -110,10 +109,11 @@ defineExpose({ show, hidden })
 </script>
 
 <template>
-  <div class="SourceChart" v-if="isShow">
+  <div class="PerformanceChart" v-if="isShow">
     <div class="q-px-sm">
       <p class="title"><i class="lar la-circle text-aiops-primary"></i> 平均CPU使用率</p>
       <my-ct-gauge ref="avrCPURef" :params="avrCPUParams" idName="avrCPU"></my-ct-gauge>
+      <!-- <my-ct-radial-line ref="avrCPURef" :params="avrCPUParams" idName="avrCPU"></my-ct-radial-line> -->
     </div>
 
     <div class="q-px-sm">
@@ -125,7 +125,7 @@ defineExpose({ show, hidden })
 </template>
 
 <style lang="scss" scoped>
-.SourceChart {
+.PerformanceChart {
   margin-left: -10px;
   .title {
     font-size: 14px;

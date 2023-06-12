@@ -1,7 +1,6 @@
 <!-- 主机弹框 -->
 <script setup lang="ts">
 import { ref, reactive, nextTick, watch } from 'vue'
-import { date } from 'quasar'
 import { useStore } from 'stores/rca/topological'
 import { storeToRefs } from 'pinia'
 import { navigateToUrl } from 'single-spa'
