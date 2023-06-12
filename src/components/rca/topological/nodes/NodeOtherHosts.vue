@@ -120,6 +120,7 @@ watch(() => currentHost.value, async (val) => {
     tab.value = ''
     await nextTick()
     nodeInfo.value.ip = val.ip
+    nodeInfo.value.type = 'host'
     await store.getMetric()
 
     tab.value = 'source'
@@ -155,7 +156,7 @@ const errorParams = reactive({
   info: {
     systemID: currentBusiness.value.value,
     type: 'node',
-    ip: nodeInfo.value.ip,
+    elementID: nodeInfo.value.ip,
     timeRange: [store.startTime, store.endTime],
     title: '告警信息'
   }

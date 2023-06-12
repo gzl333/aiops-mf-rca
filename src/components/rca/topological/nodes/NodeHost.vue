@@ -49,7 +49,11 @@ const show = async () => {
     await nextTick()
   }
   dialog.value.show()
+
+  nodeInfo.value.type = 'host'
   await store.getMetric()
+  await store.getMetricWarning()
+
   tab.value = 'source'
 }
 
@@ -84,10 +88,10 @@ const errorParams = reactive({
     maxHeight: '100vh'
   },
   info: {
-    systemID: 'system00001',
+    systemID: currentBusiness.value.value,
     type: 'node',
-    ip: 'node00001',
-    timeRange: [date.formatDate(date.subtractFromDate(Date.now(), { minutes: 5 }), 'YYYY-MM-DD HH:mm'), date.formatDate(Date.now(), 'YYYY-MM-DD HH:mm')],
+    elementID: nodeInfo.value.ip,
+    timeRange: [store.startTime, store.endTime],
     title: '告警信息'
   }
 })

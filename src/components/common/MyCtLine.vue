@@ -136,7 +136,7 @@ const show = async () => {
     for (const key in filterData) {
       chart.value.annotation().regionFilter({
         top: true,
-        start: ['min', filterData[key].start],
+        start: ['min', 100000000], // filterData[key].start
         end: ['max', filterData[key].end],
         color: '#ff4d4f'
       })

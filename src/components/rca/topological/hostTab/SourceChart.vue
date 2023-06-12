@@ -5,8 +5,6 @@ import { useStore } from 'stores/rca/topological'
 import { storeToRefs } from 'pinia'
 
 import MyCtLine from 'components/common/MyCtLine.vue'
-import MyCtColumn from 'components/common/MyCtColumn.vue'
-import MyCtTrendLine from 'components/common/MyCtTrendLine.vue'
 
 const store = useStore()
 const { nodeInfo } = storeToRefs(store)
@@ -24,10 +22,10 @@ const cpuParams = reactive({
     chart: {
       title: 'CPU使用率',
       position: 'xValue*y1Value',
-      padding: [20, 20, 25, 50],
+      padding: [30, 20, 25, 50],
       color: {
         type: 'type',
-        color: ['#FC5531', '#21BA45', '#FFAC33', '#0090FF']
+        color: ['#0090FF']
       },
       alias: '%',
       scale: {
@@ -70,7 +68,7 @@ const memoryParams = reactive({
     chart: {
       title: '内存信息',
       position: 'xValue*y1Value',
-      padding: [20, 50, 25, 50],
+      padding: [30, 50, 25, 50],
       color: {
         type: 'type',
         color: ['#0090FF', '#FC5531']
@@ -96,7 +94,7 @@ const memoryParams = reactive({
         },
         filterData: {
           memory: {
-            start: Number(nodeInfo.value.chartData.warning?.memory_used) * 1.05 || 1050, // 小于当前值，等于scale的max
+            start: Number(nodeInfo.value.chartData.warning?.memory_used) * 1.1 || 1050, // 小于当前值，等于scale的max
             end: nodeInfo.value.chartData.warning?.memory_used || 1000 // 且大于当前值 的范围标红
           }
         }
@@ -115,7 +113,7 @@ const diskParams = reactive({
     chart: {
       title: '磁盘信息',
       position: 'xValue*y1Value',
-      padding: [20, 50, 25, 40],
+      padding: [30, 50, 25, 40],
       color: 'type',
       alias: 'TiB',
       scale: {

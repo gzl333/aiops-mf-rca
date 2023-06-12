@@ -293,6 +293,8 @@ watch(() => currentHost.value, async (val) => {
     }
 
     nodeInfo.value.ip = val.ip
+    nodeInfo.value.type = 'host'
+
     // 变更当前ip,获取实例指标值及预警线
     await store.getMetric()
     await store.getMetricWarning()
@@ -311,6 +313,7 @@ watch(() => currentHost.value, async (val) => {
  * @return {*}
  */
 watch(() => hostType.value, async (val) => {
+  nodeInfo.value.type = hostType.value
   switch (val) {
     case 'host':
       tab.value = ''

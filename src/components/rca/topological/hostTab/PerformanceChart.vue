@@ -24,7 +24,7 @@ const requestParams = reactive({
     data: lineData,
     chart: {
       position: 'time*cpu',
-      padding: [15, 50, 20, 30],
+      padding: [30, 50, 20, 30],
       color: 'date',
       annotation: {
         line: {
@@ -59,7 +59,7 @@ const resTimeParams = reactive({
     ],
     chart: {
       position: 'time*value',
-      padding: [15, 50, 60, 50],
+      padding: [30, 50, 60, 50],
       adjust: 'stack',
       color: {
         type: 'type',
@@ -79,7 +79,7 @@ const sysLoadParams = reactive({
     chart: {
       title: '系统平均负载',
       position: 'xValue*y1Value',
-      padding: [20, 50, 25, 40],
+      padding: [30, 50, 25, 40],
       color: 'type',
       alias: '',
       scale: {

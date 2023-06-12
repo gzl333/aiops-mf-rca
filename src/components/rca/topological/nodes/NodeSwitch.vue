@@ -1,14 +1,12 @@
 <!-- 交换机弹框 -->
 <script setup lang="ts">
-import { ref, reactive, computed, withDefaults, onMounted, nextTick, watch } from 'vue'
+import { ref, reactive, nextTick, watch } from 'vue'
 import { useStore } from 'stores/rca/topological'
 import { storeToRefs } from 'pinia'
-
-import { date } from 'quasar'
 import { navigateToUrl } from 'single-spa'
 
 import MyDialog from 'components/common/MyDialog.vue'
-import PerformanceChart from '../switchTab/PerformanceChart.vue'
+import SourceChart from '../switchTab/SourceChart.vue'
 import PortChart from '../switchTab/PortChart.vue'
 import ErrorInfo from '../ErrorInfo.vue'
 
@@ -40,23 +38,22 @@ const clearState = () => {
 
 const dialog = ref()
 
-const tab = ref('performance')
-const performanceRef = ref()
+const tab = ref('source')
+const sourceRef = ref()
 const portRef = ref()
 
 const show = async () => {
-  // dialog.value.show()
-  // tab.value = 'performance'
-  // await nextTick() // 等待获取到Ref后才能执行下面的操作， 否则获取不到chost组件实例
-
-  // performanceRef.value.show()
   if (tab.value) {
     tab.value = ''
     await nextTick()
   }
   dialog.value.show()
+
+  nodeInfo.value.type = 'switch'
   await store.getMetric()
-  tab.value = 'performance'
+  await store.getMetricWarning()
+
+  tab.value = 'source'
 }
 
 const hidden = () => {
@@ -65,9 +62,9 @@ const hidden = () => {
 
 watch(() => tab.value, async (val) => {
   switch (val) {
-    case 'performance':
+    case 'source':
       await nextTick()
-      performanceRef.value.show()
+      sourceRef.value.show()
       break
     case 'port':
       await nextTick()
@@ -86,10 +83,10 @@ const errorParams = reactive({
     maxHeight: '100vh'
   },
   info: {
-    systemID: 'system00001',
+    systemID: currentBusiness.value.value,
     type: 'node',
-    elementID: 'node00001',
-    timeRange: [date.formatDate(date.subtractFromDate(Date.now(), { minutes: 5 }), 'YYYY-MM-DD HH:mm'), date.formatDate(Date.now(), 'YYYY-MM-DD HH:mm')],
+    elementID: nodeInfo.value.ip,
+    timeRange: [store.startTime, store.endTime],
     title: '告警信息'
   }
 })
@@ -127,7 +124,7 @@ defineExpose({ show, hidden })
             :breakpoint="0"
             narrow-indicator
           >
-            <q-tab name="performance" label="性能" />
+            <q-tab name="source" label="资源" />
             <q-tab name="port" label="端口" />
           </q-tabs>
 
@@ -135,9 +132,9 @@ defineExpose({ show, hidden })
 
           <q-scroll-area style="height: 400px">
             <q-tab-panels v-model="tab">
-              <q-tab-panel name="performance" style="padding: 12px 0">
+              <q-tab-panel name="source" style="padding: 12px 0">
                 <!-- 平均cpu使用率 -->
-                <performance-chart ref="performanceRef"></performance-chart>
+                <source-chart ref="sourceRef"></source-chart>
               </q-tab-panel>
 
               <q-tab-panel name="port" style="padding: 12px 0">

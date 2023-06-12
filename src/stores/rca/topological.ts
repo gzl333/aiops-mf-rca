@@ -61,8 +61,7 @@ interface ChartData {
   net: {
     bandwidth: BandwidthData[],
     flow: FlowData[],
-    socket: SocketData[],
-
+    socket: SocketData[]
   },
   performance: {
     load: LoadData[],
@@ -179,21 +178,23 @@ export const useStore = defineStore('topoStore', {
         }
 
         results.forEach((item: any) => {
-          data.source.cpu.unshift({
-            xValue: date.formatDate(item.timestamp * 1000, 'HH:mm'),
-            type: '系统使用率',
-            y1Value: Number(Number(item.cpu_system_rate).toFixed(2))
-          })
-          data.source.cpu.unshift({
-            xValue: date.formatDate(item.timestamp * 1000, 'HH:mm'),
-            type: '磁盘使用率',
-            y1Value: Number(Number(item.cpu_iowait_rate).toFixed(2))
-          })
-          data.source.cpu.unshift({
-            xValue: date.formatDate(item.timestamp * 1000, 'HH:mm'),
-            type: '用户使用率',
-            y1Value: Number(Number(item.cpu_user_rate).toFixed(2))
-          })
+          if (this.nodeInfo.type.includes('host')) {
+            data.source.cpu.unshift({
+              xValue: date.formatDate(item.timestamp * 1000, 'HH:mm'),
+              type: '系统使用率',
+              y1Value: Number(Number(item.cpu_system_rate).toFixed(2))
+            })
+            data.source.cpu.unshift({
+              xValue: date.formatDate(item.timestamp * 1000, 'HH:mm'),
+              type: '磁盘使用率',
+              y1Value: Number(Number(item.cpu_iowait_rate).toFixed(2))
+            })
+            data.source.cpu.unshift({
+              xValue: date.formatDate(item.timestamp * 1000, 'HH:mm'),
+              type: '用户使用率',
+              y1Value: Number(Number(item.cpu_user_rate).toFixed(2))
+            })
+          }
           data.source.cpu.unshift({
             xValue: date.formatDate(item.timestamp * 1000, 'HH:mm'),
             type: '总使用率',
@@ -279,7 +280,6 @@ export const useStore = defineStore('topoStore', {
             type: 'CurrEstab',
             y1Value: Number(Number(item.socket_CurrEstab).toFixed(2))
           })
-
           data.performance.load.unshift({
             xValue: date.formatDate(item.timestamp * 1000, 'HH:mm'),
             type: '1m',
@@ -331,13 +331,13 @@ export const useStore = defineStore('topoStore', {
           this.nodeInfo.chartData.warning = {}
         }
         // TODO 测试用数据，1.xxx段无数据，待删
-        // this.nodeInfo.chartData.warning =
-        //  {
-        //    instance: this.nodeInfo.ip,
-        //    cpu_rate: 50.0,
-        //    memory_used: 50.0,
-        //    disk_used: 50.0
-        //  }
+        this.nodeInfo.chartData.warning =
+         {
+           instance: this.nodeInfo.ip,
+           cpu_rate: 50.0,
+           memory_used: 50.0,
+           disk_used: 50.0
+         }
       } catch (error) {
         console.log(error)
       }

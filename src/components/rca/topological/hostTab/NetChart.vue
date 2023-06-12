@@ -24,7 +24,7 @@ const bandwidthParams = reactive({
     chart: {
       title: '每分钟网络带宽使用',
       position: 'xValue*y1Value',
-      padding: [20, 50, 25, 40],
+      padding: [30, 50, 25, 40],
       area: true,
       color: 'type',
       alias: 'kb/s',
@@ -76,7 +76,7 @@ const trafficParams = reactive({
     chart: {
       title: '每分钟流量',
       position: 'xValue*y1Value',
-      padding: [20, 50, 25, 50],
+      padding: [30, 50, 25, 50],
       color: {
         type: 'type',
         color: ['#0090FF', '#21BA45']
