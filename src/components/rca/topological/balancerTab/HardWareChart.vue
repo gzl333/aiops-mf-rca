@@ -1,57 +1,20 @@
 <!-- 硬件指标组件 -->
 <script setup lang="ts">
-import { ref, withDefaults, nextTick, reactive, watch } from 'vue'
+import { ref, nextTick, reactive, watch } from 'vue'
+import { useStore } from 'stores/rca/topological'
+import { storeToRefs } from 'pinia'
 
 import MyCtLine from 'components/common/MyCtLine.vue'
 import MyCtGauge from 'components/common/MyCtGauge.vue'
 
-// const { t } = useI18n()
-
-// const props = defineProps({
-//   foo: {
-//     type: String,
-//     required: false,
-//     default: ''
-//   }
-// })
-// const emits = defineEmits(['change', 'delete'])
-
-// const store = useStore()
-// const route = userRoute()
-interface Params {
-  style: {
-    width?: number
-    height?: number
-    [propName: string]: any
-  },
-  info: {
-    data: any
-    [propName: string]: any
-  },
-  [propName: string]: any
-}
-
-interface Props {
-  params?: Params
-  idName?: string
-  activeId?: string
-}
-
-const props = withDefaults(defineProps<Props>(), {
-  params: () => {
-    return {
-      style: {
-        width: 400,
-        height: 300
-      },
-      info: {
-        data: [{ value: 5.6 }]
-      }
-    }
-  },
-  idName: 'c',
-  activeId: 'activeId'
+const store = useStore()
+const { nodeInfo } = storeToRefs(store)
+const avrCPU = ref(0)
+let sumCPU = 0
+nodeInfo.value.chartData.source.cpu.forEach(item => {
+  sumCPU += item.y1Value
 })
+avrCPU.value = Number((sumCPU / (nodeInfo.value.chartData.source.cpu.length * 10)).toFixed(2))
 
 const isShow = ref(false)
 
@@ -86,7 +49,7 @@ const avrCPUParams = reactive({
     title: '',
     data: [ // 获取的数据，需要请求接口拿到（写在show方法中）
       // 仪表盘
-      { value: 6.15 }
+      { value: avrCPU.value }
     ],
     chart: {
       annotation: {
@@ -104,35 +67,10 @@ const memoryUsedParams = reactive({
     height: 200
   },
   info: {
-    data: [
-      { time: '10:17', type: 'TMM内存使用', value: 1.0 },
-      { time: '10:19', type: 'TMM内存使用', value: 1.2 },
-      { time: '10:21', type: 'TMM内存使用', value: 1.2 },
-      { time: '10:23', type: 'TMM内存使用', value: 1.7 },
-      { time: '10:25', type: 'TMM内存使用', value: 1.7 },
-      { time: '10:27', type: 'TMM内存使用', value: 1.1 },
-      { time: '10:29', type: 'TMM内存使用', value: 1.1 },
-      { time: '10:31', type: 'TMM内存使用', value: 1.2 },
-      { time: '10:33', type: 'TMM内存使用', value: 1.2 },
-      { time: '10:35', type: 'TMM内存使用', value: 1.7 },
-      { time: '10:37', type: 'TMM内存使用', value: 1.7 },
-      { time: '10:39', type: 'TMM内存使用', value: 1.1 },
-      { time: '10:17', type: '主机内存使用', value: 10 },
-      { time: '10:19', type: '主机内存使用', value: 12 },
-      { time: '10:21', type: '主机内存使用', value: 12 },
-      { time: '10:23', type: '主机内存使用', value: 17 },
-      { time: '10:25', type: '主机内存使用', value: 17 },
-      { time: '10:27', type: '主机内存使用', value: 11 },
-      { time: '10:29', type: '主机内存使用', value: 11 },
-      { time: '10:31', type: '主机内存使用', value: 12 },
-      { time: '10:33', type: '主机内存使用', value: 12 },
-      { time: '10:35', type: '主机内存使用', value: 17 },
-      { time: '10:37', type: '主机内存使用', value: 17 },
-      { time: '10:39', type: '主机内存使用', value: 11 }
-    ],
+    data: nodeInfo.value.chartData.source.f5Memory,
     chart: {
-      position: 'time*value',
-      padding: [15, 20, 60, 50],
+      position: 'xValue*y1Value',
+      padding: [30, 20, 25, 50],
       color: 'type',
       alias: 'GiB',
       annotation: {

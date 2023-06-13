@@ -6,8 +6,6 @@ import { storeToRefs } from 'pinia'
 import MyCtLine from 'components/common/MyCtLine.vue'
 import MyCtGauge from 'components/common/MyCtGauge.vue'
 
-// import MyCtRadialLine from 'components/common/MyCtRadialLine.vue'
-
 const store = useStore()
 const { nodeInfo } = storeToRefs(store)
 
@@ -28,8 +26,8 @@ watch(() => isShow.value, async (val) => {
     avrCPURef.value.show()
     CPURateRef.value.show()
   } else {
-    avrCPURef.value.hidden()
-    CPURateRef.value.hidden()
+    avrCPURef.value && avrCPURef.value.hidden()
+    CPURateRef.value && CPURateRef.value.hidden()
   }
 })
 
@@ -40,6 +38,8 @@ let sumCPU = 0
 nodeInfo.value.chartData.source.cpu.forEach(item => {
   sumCPU += item.y1Value
 })
+avrCPU.value = Number((sumCPU / (nodeInfo.value.chartData.source.cpu.length * 10)).toFixed(2))
+
 const avrCPUParams = reactive({
   style: {
     width: 400,
@@ -60,6 +60,7 @@ const avrCPUParams = reactive({
     }
   }
 })
+
 const CPURateParams = reactive({
   style: {
     width: 400,

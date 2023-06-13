@@ -52,11 +52,30 @@ interface Warning {
   [propName: string]: number | string
 }
 
+interface F5Memory {
+  xValue: string
+  y1Value: number
+  type: string
+}
+
+interface ThroughputTotal {
+  xValue: string
+  y1Value: number
+  type: string
+}
+
+interface Throughput {
+  xValue: string
+  y1Value: number
+  type: string
+}
+
 interface ChartData {
   source: {
     cpu: CPUData[]
     memory: MemoryData[]
     disk: DiskData[]
+    f5Memory: F5Memory[]
   },
   net: {
     bandwidth: BandwidthData[],
@@ -65,6 +84,8 @@ interface ChartData {
   },
   performance: {
     load: LoadData[],
+    throughputTotal: ThroughputTotal[],
+    throughput: Throughput[]
   },
   warning: Warning
 }
@@ -121,7 +142,8 @@ export const useStore = defineStore('topoStore', {
           source: {
             cpu: [],
             memory: [],
-            disk: []
+            disk: [],
+            f5Memory: []
           },
           net: {
             bandwidth: [],
@@ -129,7 +151,9 @@ export const useStore = defineStore('topoStore', {
             socket: []
           },
           performance: {
-            load: []
+            load: [],
+            throughputTotal: [],
+            throughput: []
           },
           // 预警线
           warning: {}
@@ -164,7 +188,8 @@ export const useStore = defineStore('topoStore', {
           source: {
             cpu: [],
             memory: [],
-            disk: []
+            disk: [],
+            f5Memory: []
           },
           net: {
             bandwidth: [],
@@ -172,7 +197,9 @@ export const useStore = defineStore('topoStore', {
             socket: []
           },
           performance: {
-            load: []
+            load: [],
+            throughputTotal: [],
+            throughput: []
           },
           warning: {}
         }
@@ -220,6 +247,18 @@ export const useStore = defineStore('topoStore', {
             type: '总磁盘量',
             y1Value: Number((Number(item.filesystem_size) / 1024 / 1024 / 1024).toFixed(2))
           })
+
+          data.source.f5Memory.unshift({
+            xValue: date.formatDate(item.timestamp * 1000, 'HH:mm'),
+            type: '主机内存使用',
+            y1Value: Number((Number(item.f5_memory_used_host) / 1024 / 1024 / 1024).toFixed(2))
+          })
+          data.source.f5Memory.unshift({
+            xValue: date.formatDate(item.timestamp * 1000, 'HH:mm'),
+            type: 'TMM 内存使用',
+            y1Value: Number((Number(item.f5_memory_used_ttm) / 1024 / 1024 / 1024).toFixed(2))
+          })
+
           data.net.bandwidth.unshift({
             xValue: date.formatDate(item.timestamp * 1000, 'HH:mm'),
             type: '下载',
@@ -294,6 +333,39 @@ export const useStore = defineStore('topoStore', {
             xValue: date.formatDate(item.timestamp * 1000, 'HH:mm'),
             type: '15m',
             y1Value: Number(Number(item.node_load15).toFixed(2))
+          })
+
+          data.performance.throughputTotal.unshift({
+            xValue: date.formatDate(item.timestamp * 1000, 'HH:mm'),
+            type: '服务器流量',
+            y1Value: Number(Number((+item.f5_sysStatServerBytesIn + (+item.f5_sysStatServerBytesOut)) / 1024 / 1024 / 1024).toFixed(2))
+          })
+
+          data.performance.throughputTotal.unshift({
+            xValue: date.formatDate(item.timestamp * 1000, 'HH:mm'),
+            type: '客户端流量',
+            y1Value: Number(Number((+item.f5_sysStatClientBytesIn + (+item.f5_sysStatClientBytesOut)) / 1024 / 1024 / 1024).toFixed(2))
+          })
+
+          data.performance.throughput.unshift({
+            xValue: date.formatDate(item.timestamp * 1000, 'HH:mm'),
+            type: '服务器入站流量',
+            y1Value: Number((Number(item.f5_sysStatServerBytesIn) / 1024 / 1024 / 1024).toFixed(2))
+          })
+          data.performance.throughput.unshift({
+            xValue: date.formatDate(item.timestamp * 1000, 'HH:mm'),
+            type: '服务器出站流量',
+            y1Value: Number((Number(item.f5_sysStatServerBytesOut) / 1024 / 1024 / 1024).toFixed(2))
+          })
+          data.performance.throughput.unshift({
+            xValue: date.formatDate(item.timestamp * 1000, 'HH:mm'),
+            type: '客户端入站流量',
+            y1Value: Number((Number(item.f5_sysStatClientBytesIn) / 1024 / 1024 / 1024).toFixed(2))
+          })
+          data.performance.throughput.unshift({
+            xValue: date.formatDate(item.timestamp * 1000, 'HH:mm'),
+            type: '客户端出站流量',
+            y1Value: Number((Number(item.f5_sysStatClientBytesOut) / 1024 / 1024 / 1024).toFixed(2))
           })
         })
 

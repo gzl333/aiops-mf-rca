@@ -54,9 +54,9 @@ import { logs } from 'src/configs/logs'
           <div v-for="update in log.updates" :key="update.info" class="items-center q-gutter-md q-pl-lg">
             <div class="row">
               <div class="col-auto q-pr-md">*</div>
-              <p class="col-auto text-grey-8" v-html="update.info"></p>
+              <p class="col-auto text-grey-8 q-pr-md">{{ update.info }}</p>
+              <div class="col-auto text-grey-8">提交人: {{ update.commit_author }}</div>
             </div>
-            <div class="col-auto text-grey-8">提交人: {{ update.commit_author }}</div>
           </div>
 
         </div>
@@ -78,9 +78,9 @@ import { logs } from 'src/configs/logs'
           <div v-for="update in log.updates" :key="update.info" class="items-center q-gutter-md q-pl-lg">
             <div class="row">
               <div class="col-auto q-pr-md">*</div>
-              <p class="col-auto text-grey-8" v-html="update.info"></p>
+              <p class="col-auto text-grey-8 q-pr-md">{{ update.info }}</p>
+              <div class="col-auto text-grey-8">提交人: {{ update.commit_author }}</div>
             </div>
-            <div class="col-auto text-grey-8">提交人: {{ update.commit_author }}</div>
           </div>
 
         </div>

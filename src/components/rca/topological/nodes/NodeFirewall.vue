@@ -3,12 +3,12 @@
 import { ref, reactive, nextTick, watch } from 'vue'
 import { useStore } from 'stores/rca/topological'
 import { storeToRefs } from 'pinia'
-import { date } from 'quasar'
 import { navigateToUrl } from 'single-spa'
 
 import MyDialog from 'components/common/MyDialog.vue'
 import SourceChart from '../firewallTab/SourceChart.vue'
 import PortChart from '../firewallTab/PortChart.vue'
+import NetChart from '../firewallTab/NetChart.vue'
 import ErrorInfo from '../ErrorInfo.vue'
 
 const appPath = process.env.appPath as string
@@ -40,6 +40,7 @@ const dialog = ref()
 
 const tab = ref('source')
 const sourceRef = ref()
+const netRef = ref()
 const portRef = ref()
 
 const show = async () => {
@@ -69,6 +70,10 @@ watch(() => tab.value, async (val) => {
     case 'port':
       await nextTick()
       portRef.value.show()
+      break
+    case 'net':
+      await nextTick()
+      netRef.value.show()
       break
     default:
       break
@@ -103,27 +108,11 @@ defineExpose({ show, hidden })
     <my-dialog ref="dialog" :nodeParams="params" @clearState="clearState">
       <!-- cpu使用率，端口，平均cpu使用率 -->
       <template #container>
-        <div class="q-px-xs">
-          <div class="row">
-            <div class="row col-7">
-              <label>告警数：</label>
-              <p class="text-aiops-primary cursor-pointer" @click="showError">19</p>
-            </div>
-            <div class="row col-5">
-              <label>日志：</label>
-              <p class="text-aiops-primary cursor-pointer">4728</p>
-            </div>
-          </div>
-
-          <div class="row">
-            <div class="row col-7">
-              <label>运行时长：</label>
-              <p>19天</p>
-            </div>
-            <div class="row col-5">
-              <label class="text-aiops-primary cursor-pointer" @click="navigateToUrl(appPath + '/monitorUnit')" v-close-popup>查看详情</label>
-            </div>
-          </div>
+        <div class="q-px-xs q-my-sm ">
+          <span class="text-bold">{{ nodeInfo.ip }}({{ nodeInfo.label }})：</span>
+          <span class="text-aiops-primary cursor-pointer" @click="showError">告警</span>
+          <span class="text-aiops-primary cursor-pointer q-pl-md" @click="navigateToUrl(appPath + '/monitorUnit')" v-close-popup>日志</span>
+          <span class="text-aiops-primary cursor-pointer q-pl-md" @click="navigateToUrl(appPath + '/monitorUnit')" v-close-popup>详情</span>
         </div>
 
         <q-separator class="q-mt-sm" color="aiops-border" />
@@ -140,7 +129,8 @@ defineExpose({ show, hidden })
             :breakpoint="0"
             narrow-indicator
           >
-            <q-tab name="source" label="性能" />
+            <q-tab name="source" label="硬件" />
+            <q-tab name="net" label="网络" />
             <q-tab name="port" label="端口" />
           </q-tabs>
 
@@ -152,7 +142,10 @@ defineExpose({ show, hidden })
                 <!-- cpu使用率 -->
                 <source-chart ref="sourceRef"></source-chart>
               </q-tab-panel>
-
+              <q-tab-panel name="net" style="padding: 12px 0">
+                <!-- 每分钟流量 -->
+                <net-chart ref="netRef"></net-chart>
+              </q-tab-panel>
               <q-tab-panel name="port" style="padding: 12px 0">
                 <!-- 端口 -->
                 <port-chart ref="portRef"></port-chart>

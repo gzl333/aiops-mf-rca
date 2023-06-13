@@ -1,13 +1,41 @@
 // 更新日志内容，版本降序排列
 export const logs = [
   {
+    version: 'v0.0.8',
+    date: '2023-06-13',
+    time: '17:08:09',
+    release_author: 'yuumi',
+    updates: [
+      {
+        info: '1. 接入防火墙流量数据；',
+        commit_author: 'yuumi'
+      },
+      {
+        info: '2. 接入F5负载均衡器cpu使用率 内存使用、吞吐量、吞吐总量数据。',
+        commit_author: 'yuumi'
+      },
+      {
+        info: '接口提供：庞文豪',
+        commit_author: 'yuumi'
+      }
+    ]
+  },
+  {
     version: 'v0.0.7',
     date: '2023-06-12',
     time: '16:48:09',
     release_author: 'yuumi',
     updates: [
       {
-        info: '1. 接入交换机cpu使用率、平均使用率、每分钟流量数据； <br> 2. 接入防火墙cpu使用率数据。 <br> 接口提供：庞文豪',
+        info: '1. 接入交换机cpu使用率、平均使用率、每分钟流量数据；',
+        commit_author: 'yuumi'
+      },
+      {
+        info: '2. 接入防火墙cpu使用率数据。',
+        commit_author: 'yuumi'
+      },
+      {
+        info: '接口提供：庞文豪',
         commit_author: 'yuumi'
       }
     ]
@@ -19,7 +47,15 @@ export const logs = [
     release_author: 'yuumi',
     updates: [
       {
-        info: '1. 新增扑图内app主机中nginx,tomcat日志列表展示; <br> 2. 修复时间传参格式bug。 <br> 接口提供：庞文豪',
+        info: '1. 新增扑图内app主机中nginx,tomcat日志列表展示；',
+        commit_author: 'yuumi'
+      },
+      {
+        info: '2. 修复时间传参格式bug。',
+        commit_author: 'yuumi'
+      },
+      {
+        info: '接口提供：庞文豪',
         commit_author: 'yuumi'
       }
     ]
@@ -31,7 +67,19 @@ export const logs = [
     release_author: 'yuumi',
     updates: [
       {
-        info: '1. 根因定位系统概览文案调整; <br> 2. 左侧菜单栏重写及跳转按钮路由变更; <br> 3. 隐藏业务系统选项。<br>变更提出：张海明； 技术支持：郭祖良',
+        info: '1. 根因定位系统概览文案调整;',
+        commit_author: 'yuumi'
+      },
+      {
+        info: '2. 左侧菜单栏重写及跳转按钮路由变更; ',
+        commit_author: 'yuumi'
+      },
+      {
+        info: '3. 隐藏业务系统选项。',
+        commit_author: 'yuumi'
+      },
+      {
+        info: '变更提出：张海明； 技术支持：郭祖良',
         commit_author: 'yuumi'
       }
     ]

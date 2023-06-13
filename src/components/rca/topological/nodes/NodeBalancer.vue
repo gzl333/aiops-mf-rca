@@ -1,9 +1,8 @@
 <!-- f5负载均衡器弹框 -->
 <script setup lang="ts">
-import { ref, reactive, computed, withDefaults, onMounted, nextTick, watch } from 'vue'
-// import { useI18n } from 'vue-i18n'
-// import { useStore } from 'stores/store'
-// import { useRoute } from 'vue-router'
+import { ref, reactive, nextTick, watch } from 'vue'
+import { useStore } from 'stores/rca/topological'
+import { storeToRefs } from 'pinia'
 import { date } from 'quasar'
 import { navigateToUrl } from 'single-spa'
 
@@ -14,59 +13,25 @@ import PortChart from '../balancerTab/PortChart.vue'
 import ErrorInfo from '../ErrorInfo.vue'
 
 const appPath = process.env.appPath as string
-// const { t } = useI18n()
+const store = useStore()
+const { currentBusiness, nodeInfo } = storeToRefs(store)
 
-// const props = defineProps({
-//   foo: {
-//     type: String,
-//     required: false,
-//     default: ''
-//   }
-// })
-// const emits = defineEmits(['change', 'delete'])
-
-// const store = useStore()
-// const route = userRoute()
-interface NodeParams {
-  style?: {
-    width?: number
-    maxWidth?: string | number
-    [propName: string]: any
+const params = reactive({
+  style: {
+    width: 550,
+    maxWidth: '70vw',
+    maxHeight: '100vh'
   },
-  info?: {
-    systemID: string
-    type: string
-    elementID: string
-    timeRange: string[]
-    title: string
-    [propName: string]: any
-  },
-  [propName: string]: any
-}
-
-interface Props {
-  params?: NodeParams
-  currentSelect?: any
-}
-
-const props = withDefaults(defineProps<Props>(), {
-  params: () => {
-    return {
-      style: {
-        width: 450,
-        maxWidth: '70vw',
-        maxHeight: '100vh'
-      },
-      info: {
-        systemID: 'system00001',
-        type: 'node',
-        elementID: 'node00001',
-        timeRange: [date.formatDate(date.subtractFromDate(Date.now(), { minutes: 5 }), 'YYYY-MM-DD HH:mm'), date.formatDate(Date.now(), 'YYYY-MM-DD HH:mm')],
-        title: '节点详情'
-      }
-    }
+  info: {
+    systemID: currentBusiness.value.value,
+    type: 'node',
+    ip: nodeInfo.value.ip,
+    label: nodeInfo.value.label,
+    timeRange: [store.startTime, store.endTime],
+    title: '节点详情'
   }
 })
+
 const emits = defineEmits(['clearState'])
 
 const clearState = () => {
@@ -75,17 +40,23 @@ const clearState = () => {
 
 const dialog = ref()
 
-const tab = ref('hardware')
+const tab = ref('')
 const hardwareRef = ref()
 const performanceRef = ref()
 const portRef = ref()
 
 const show = async () => {
+  if (tab.value) {
+    tab.value = ''
+    await nextTick()
+  }
   dialog.value.show()
-  tab.value = 'hardware'
-  await nextTick() // 等待获取到Ref后才能执行下面的操作， 否则获取不到chost组件实例
 
-  hardwareRef.value.show()
+  nodeInfo.value.type = 'balance'
+  await store.getMetric()
+  await store.getMetricWarning()
+
+  tab.value = 'hardware'
 }
 
 const hidden = () => {
@@ -119,10 +90,10 @@ const errorParams = reactive({
     maxHeight: '100vh'
   },
   info: {
-    systemID: 'system00001',
+    systemID: currentBusiness.value.value,
     type: 'node',
-    elementID: 'node00001',
-    timeRange: [date.formatDate(date.subtractFromDate(Date.now(), { minutes: 5 }), 'YYYY-MM-DD HH:mm'), date.formatDate(Date.now(), 'YYYY-MM-DD HH:mm')],
+    elementID: nodeInfo.value.ip,
+    timeRange: [store.startTime, store.endTime],
     title: '告警信息'
   }
 })
@@ -138,27 +109,11 @@ defineExpose({ show, hidden })
   <div class="NodeBalancer">
     <my-dialog ref="dialog" :nodeParams="params" @clearState="clearState">
       <template #container>
-        <div class="q-px-xs">
-          <div class="row">
-            <div class="row col-7">
-              <label>告警数：</label>
-              <p class="text-aiops-primary cursor-pointer" @click="showError">19</p>
-            </div>
-            <div class="row col-5">
-              <label>日志：</label>
-              <p class="text-aiops-primary cursor-pointer">4728</p>
-            </div>
-          </div>
-
-          <div class="row">
-            <div class="row col-7">
-              <label>运行时长：</label>
-              <p>19天</p>
-            </div>
-            <div class="row col-5">
-              <label class="text-aiops-primary cursor-pointer" @click="navigateToUrl(appPath + '/monitorUnit')" v-close-popup>查看详情</label>
-            </div>
-          </div>
+        <div class="q-px-xs q-my-sm ">
+          <span class="text-bold">{{ nodeInfo.ip }}({{ nodeInfo.label }})：</span>
+          <span class="text-aiops-primary cursor-pointer" @click="showError">告警</span>
+          <span class="text-aiops-primary cursor-pointer q-pl-md" @click="navigateToUrl(appPath + '/monitorUnit')" v-close-popup>日志</span>
+          <span class="text-aiops-primary cursor-pointer q-pl-md" @click="navigateToUrl(appPath + '/monitorUnit')" v-close-popup>详情</span>
         </div>
 
         <q-separator class="q-mt-sm" color="aiops-border" />
