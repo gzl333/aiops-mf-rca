@@ -7,85 +7,35 @@ interface LabelVal {
   value: string
 }
 
-interface CPUData {
+interface CommonData {
   xValue: string
   y1Value: number
   type: string
 }
-
-interface MemoryData {
-  xValue: string
-  y1Value: number
-  type: string
-}
-
-interface DiskData {
-  xValue: string
-  y1Value: number
-  type: string
-}
-interface BandwidthData {
-  xValue: string
-  y1Value: number
-  type: string
-}
-
-interface FlowData {
-  xValue: string
-  y1Value: number
-  type: string
-}
-
-interface SocketData {
-  xValue: string
-  y1Value: number
-  type: string
-}
-
-interface LoadData {
-  xValue: string
-  y1Value: number
-  type: string
-}
-
 interface Warning {
   [propName: string]: number | string
 }
 
-interface F5Memory {
-  xValue: string
-  y1Value: number
-  type: string
-}
-
-interface ThroughputTotal {
-  xValue: string
-  y1Value: number
-  type: string
-}
-
-interface Throughput {
-  xValue: string
-  y1Value: number
-  type: string
-}
-
 interface ChartData {
   source: {
-    cpu: CPUData[]
-    memory: MemoryData[]
-    disk: DiskData[]
-    f5Memory: F5Memory[]
+    cpu: CommonData[]
+    memory: CommonData[]
+    disk: CommonData[]
+    f5Memory: CommonData[]
   },
   net: {
-    bandwidth: BandwidthData[],
-    flow: FlowData[],
-    socket: SocketData[]
+    bandwidth: CommonData[],
+    flow: CommonData[],
+    socket: CommonData[]
   },
   performance: {
-    load: LoadData[],
-    throughputTotal: ThroughputTotal[],
-    throughput: Throughput[]
+    load: CommonData[],
+    throughputTotal: CommonData[],
+    throughput: CommonData[]
+    conns: CommonData[]
+    sslConns: CommonData[]
+    pvaConns: CommonData[]
+    tcpConns: CommonData[]
   },
   warning: Warning
 }
@@ -153,7 +103,11 @@ export const useStore = defineStore('topoStore', {
           performance: {
             load: [],
             throughputTotal: [],
-            throughput: []
+            throughput: [],
+            conns: [],
+            sslConns: [],
+            pvaConns: [],
+            tcpConns: []
           },
           // 预警线
           warning: {}
@@ -199,7 +153,11 @@ export const useStore = defineStore('topoStore', {
           performance: {
             load: [],
             throughputTotal: [],
-            throughput: []
+            throughput: [],
+            conns: [],
+            sslConns: [],
+            pvaConns: [],
+            tcpConns: []
           },
           warning: {}
         }
@@ -366,6 +324,67 @@ export const useStore = defineStore('topoStore', {
             xValue: date.formatDate(item.timestamp * 1000, 'HH:mm'),
             type: '客户端出站流量',
             y1Value: Number((Number(item.f5_sysStatClientBytesOut) / 1024 / 1024 / 1024).toFixed(2))
+          })
+          data.performance.conns.unshift({
+            xValue: date.formatDate(item.timestamp * 1000, 'HH:mm'),
+            type: '所有客户端连接总数',
+            y1Value: Number(item.f5_sysStatClientTotConns)
+          })
+          data.performance.conns.unshift({
+            xValue: date.formatDate(item.timestamp * 1000, 'HH:mm'),
+            type: '所有服务器连接总数',
+            y1Value: Number(item.f5_sysStatServerTotConns)
+          })
+          data.performance.conns.unshift({
+            xValue: date.formatDate(item.timestamp * 1000, 'HH:mm'),
+            type: '当前所有客户端连接总数',
+            y1Value: Number(item.f5_sysStatClientCurConns)
+          })
+          data.performance.conns.unshift({
+            xValue: date.formatDate(item.timestamp * 1000, 'HH:mm'),
+            type: '当前所有服务器连接总数',
+            y1Value: Number(item.f5_sysStatServerCurConns)
+          })
+          data.performance.sslConns.unshift({
+            xValue: date.formatDate(item.timestamp * 1000, 'HH:mm'),
+            type: '客户端会话总数(本机模式)',
+            y1Value: Number(item.f5_sysClientsslStatTotNativeConns)
+          })
+          data.performance.sslConns.unshift({
+            xValue: date.formatDate(item.timestamp * 1000, 'HH:mm'),
+            type: '客户端会话总数(兼容和本机模式)',
+            y1Value: Number(item.f5_sysClientsslStatTotCompatConns)
+          })
+          data.performance.sslConns.unshift({
+            xValue: date.formatDate(item.timestamp * 1000, 'HH:mm'),
+            type: '当前所有客户端SSL会话连接数',
+            y1Value: Number(item.f5_sysClientsslStatCurConns)
+          })
+          data.performance.sslConns.unshift({
+            xValue: date.formatDate(item.timestamp * 1000, 'HH:mm'),
+            type: '当前所有服务器SSL会话的连接数',
+            y1Value: Number(item.f5_sysServersslStatCurConns)
+          })
+
+          data.performance.pvaConns.unshift({
+            xValue: date.formatDate(item.timestamp * 1000, 'HH:mm'),
+            type: '所有PVA客户端连接的总数',
+            y1Value: Number(item.f5_sysStatPvaClientTotConns)
+          })
+          data.performance.pvaConns.unshift({
+            xValue: date.formatDate(item.timestamp * 1000, 'HH:mm'),
+            type: '所有PVA服务器连接的总数',
+            y1Value: Number(item.f5_sysStatPvaServerTotConns)
+          })
+          data.performance.tcpConns.unshift({
+            xValue: date.formatDate(item.timestamp * 1000, 'HH:mm'),
+            type: '接收TCP连接数',
+            y1Value: Number(item.f5_sysTcpStatAccepts)
+          })
+          data.performance.tcpConns.unshift({
+            xValue: date.formatDate(item.timestamp * 1000, 'HH:mm'),
+            type: '成功连接数',
+            y1Value: Number(item.f5_sysTcpStatConnects)
           })
         })
 
