@@ -422,13 +422,13 @@ export const useStore = defineStore('topoStore', {
           this.nodeInfo.chartData.warning = {}
         }
         // TODO 测试用数据，1.xxx段无数据，待删
-        this.nodeInfo.chartData.warning =
-         {
-           instance: this.nodeInfo.ip,
-           cpu_rate: 50.0,
-           memory_used: 50.0,
-           disk_used: 50.0
-         }
+        // this.nodeInfo.chartData.warning =
+        //  {
+        //    instance: this.nodeInfo.ip,
+        //    cpu_rate: 50.0,
+        //    memory_used: 50.0,
+        //    disk_used: 50.0
+        //  }
       } catch (error) {
         console.log(error)
       }
