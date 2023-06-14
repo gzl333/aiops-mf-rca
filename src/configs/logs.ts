@@ -1,6 +1,26 @@
 // 更新日志内容，版本降序排列
 export const logs = [
   {
+    version: 'v0.0.9',
+    date: '2023-06-13',
+    time: '15:08:09',
+    release_author: 'yuumi',
+    updates: [
+      {
+        info: '1. 接入F5负载均衡器连接数、ssl会话统计、pva连接、tcp连接数据 ；',
+        commit_author: 'yuumi'
+      },
+      {
+        info: '2. 接入vpn图表cpu使用率、平均使用率数据。',
+        commit_author: 'yuumi'
+      },
+      {
+        info: '接口提供：庞文豪',
+        commit_author: 'yuumi'
+      }
+    ]
+  },
+  {
     version: 'v0.0.8',
     date: '2023-06-13',
     time: '17:08:09',

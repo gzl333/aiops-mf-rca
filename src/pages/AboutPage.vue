@@ -24,8 +24,7 @@ import { logs } from 'src/configs/logs'
 </script>
 
 <template>
-  <div class="AboutPage bg-grey-2 column items-center" style="min-height: calc(100vh - 50px);">
-
+  <div class="AboutPage bg-grey-2 column items-center" style="height: calc(100vh - 50px); overflow: auto;">
     <q-card flat bordered class="content-fixed-width q-mt-lg">
       <q-card-section>
         <div class="text-h6">关于AIOps-RCA</div>
@@ -88,7 +87,6 @@ import { logs } from 'src/configs/logs'
       </q-card-section>
 
     </q-card>
-
   </div>
 </template>
 
