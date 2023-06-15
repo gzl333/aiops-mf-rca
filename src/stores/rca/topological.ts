@@ -22,6 +22,7 @@ interface ChartData {
     memory: CommonData[]
     disk: CommonData[]
     f5Memory: CommonData[]
+    filesystem: CommonData[]
   },
   net: {
     bandwidth: CommonData[],
@@ -36,7 +37,10 @@ interface ChartData {
     sslConns: CommonData[]
     pvaConns: CommonData[]
     tcpConns: CommonData[]
-  },
+    mysqlQPS:CommonData[]
+    mysqlTPS: CommonData[]
+    mysqlDelay: CommonData[]
+},
   warning: Warning
 }
 
@@ -93,7 +97,8 @@ export const useStore = defineStore('topoStore', {
             cpu: [],
             memory: [],
             disk: [],
-            f5Memory: []
+            f5Memory: [],
+            filesystem: []
           },
           net: {
             bandwidth: [],
@@ -107,7 +112,10 @@ export const useStore = defineStore('topoStore', {
             conns: [],
             sslConns: [],
             pvaConns: [],
-            tcpConns: []
+            tcpConns: [],
+            mysqlQPS: [],
+            mysqlTPS: [],
+            mysqlDelay: []
           },
           // 预警线
           warning: {}
@@ -143,7 +151,8 @@ export const useStore = defineStore('topoStore', {
             cpu: [],
             memory: [],
             disk: [],
-            f5Memory: []
+            f5Memory: [],
+            filesystem: []
           },
           net: {
             bandwidth: [],
@@ -157,13 +166,16 @@ export const useStore = defineStore('topoStore', {
             conns: [],
             sslConns: [],
             pvaConns: [],
-            tcpConns: []
+            tcpConns: [],
+            mysqlQPS: [],
+            mysqlTPS: [],
+            mysqlDelay: []
           },
           warning: {}
         }
 
         results.forEach((item: any) => {
-          if (this.nodeInfo.type.includes('host')) {
+          if (this.nodeInfo.type.includes('host') || this.nodeInfo.type.includes('db')) {
             data.source.cpu.unshift({
               xValue: date.formatDate(item.timestamp * 1000, 'HH:mm'),
               type: '系统使用率',
@@ -195,17 +207,41 @@ export const useStore = defineStore('topoStore', {
             type: '已用',
             y1Value: Number((Number(item.memory_used) / 1024 / 1024 / 1024).toFixed(2))
           })
+          data.source.memory.unshift({
+            xValue: date.formatDate(item.timestamp * 1000, 'HH:mm'),
+            type: '空闲',
+            y1Value: Number((Number(item.memory_free) / 1024 / 1024 / 1024).toFixed(2))
+          })
+          // data.source.memory.unshift({
+          //   xValue: date.formatDate(item.timestamp * 1000, 'HH:mm'),
+          //   type: '可用',
+          //   y1Value: Number((Number(item.memory_available) / 1024 / 1024 / 1024).toFixed(2))
+          // })
           data.source.disk.unshift({
             xValue: date.formatDate(item.timestamp * 1000, 'HH:mm'),
-            type: '总使用量',
-            y1Value: Number((Number(item.filesystem_avail) / 1024 / 1024 / 1024).toFixed(2))
+            type: '磁盘读总量',
+            y1Value: Number((Number(item.disk_read) / 1024 / 1024 / 1024).toFixed(2))
           })
           data.source.disk.unshift({
             xValue: date.formatDate(item.timestamp * 1000, 'HH:mm'),
-            type: '总磁盘量',
+            type: '磁盘写总量',
+            y1Value: Number((Number(item.disk_written) / 1024 / 1024 / 1024).toFixed(2))
+          })
+          data.source.filesystem.unshift({
+            xValue: date.formatDate(item.timestamp * 1000, 'HH:mm'),
+            type: '总空间',
             y1Value: Number((Number(item.filesystem_size) / 1024 / 1024 / 1024).toFixed(2))
           })
-
+          data.source.filesystem.unshift({
+            xValue: date.formatDate(item.timestamp * 1000, 'HH:mm'),
+            type: '可用分区空间',
+            y1Value: Number((Number(item.filesystem_avail) / 1024 / 1024 / 1024).toFixed(2))
+          })
+          data.source.filesystem.unshift({
+            xValue: date.formatDate(item.timestamp * 1000, 'HH:mm'),
+            type: '空闲内存量',
+            y1Value: Number((Number(item.filesystem_free) / 1024 / 1024 / 1024).toFixed(2))
+          })
           data.source.f5Memory.unshift({
             xValue: date.formatDate(item.timestamp * 1000, 'HH:mm'),
             type: '主机内存使用',
@@ -385,6 +421,22 @@ export const useStore = defineStore('topoStore', {
             xValue: date.formatDate(item.timestamp * 1000, 'HH:mm'),
             type: '成功连接数',
             y1Value: Number(item.f5_sysTcpStatConnects)
+          })
+
+          data.performance.mysqlQPS.unshift({
+            xValue: date.formatDate(item.timestamp * 1000, 'HH:mm'),
+            type: '每秒查询数',
+            y1Value: Number(item.mysql_qps)
+          })
+          data.performance.mysqlTPS.unshift({
+            xValue: date.formatDate(item.timestamp * 1000, 'HH:mm'),
+            type: ' 每秒事务数',
+            y1Value: Number(item.mysql_tps)
+          })
+          data.performance.mysqlDelay.unshift({
+            xValue: date.formatDate(item.timestamp * 1000, 'HH:mm'),
+            type: ' 主从延迟',
+            y1Value: Number(item.mysql_master_slave_delay)
           })
         })
 

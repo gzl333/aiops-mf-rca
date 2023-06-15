@@ -115,7 +115,7 @@ const diskParams = reactive({
       position: 'xValue*y1Value',
       padding: [30, 50, 25, 40],
       color: 'type',
-      alias: 'TiB',
+      alias: 'GiB',
       scale: {
         // max: 100,
         min: 0
@@ -128,7 +128,7 @@ const diskParams = reactive({
           usage: {
             label: '预警线', // 预警线名
             value: nodeInfo.value.chartData.warning?.disk_used || 80, // 预警值
-            alias: 'TiB' // 预警线单位
+            alias: 'GiB' // 预警线单位
           }
         },
         regionFilter: { // 是否将预警线范围内的值覆盖成红色

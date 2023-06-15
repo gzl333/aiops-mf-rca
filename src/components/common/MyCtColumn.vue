@@ -1,22 +1,9 @@
 <!-- 柱状图 -->
 <script setup lang="ts">
-import { ref, withDefaults, nextTick, watch } from 'vue'
+import { ref, nextTick, watch } from 'vue'
 
 import { Chart } from '@antv/g2'
 
-// const { t } = useI18n()
-
-// const props = defineProps({
-//   foo: {
-//     type: String,
-//     required: false,
-//     default: ''
-//   }
-// })
-// const emits = defineEmits(['change', 'delete'])
-
-// const store = useStore()
-// const route = userRoute()
 interface Params {
   style: {
     width?: number
@@ -186,9 +173,10 @@ const show = async () => {
         start: ['min', filterData[key].start],
         end: ['max', filterData[key].end],
         // offsetX: 30,
+        // apply: ['interval'],
         apply: ['interval'],
         autoAdjust: true,
-        adjust: true,
+        // adjust: true,
         color: '#ff4d4f'
       })
     }

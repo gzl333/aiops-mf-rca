@@ -10,6 +10,8 @@ export default {
   monitorU: 'Monitor Unit',
   topo: 'Topological',
   mailSys: 'Mail System',
+  dnsSys: 'DNS System',
+  cstnetSys: 'CSTNET',
   // 筛选组件
   business: 'Business Systems',
   timeSel: 'Time Selection',

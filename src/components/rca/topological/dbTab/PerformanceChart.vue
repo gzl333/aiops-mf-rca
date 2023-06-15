@@ -1,65 +1,20 @@
 <!-- 性能组件 -->
 <script setup lang="ts">
-import { ref, withDefaults, nextTick, reactive, watch } from 'vue'
-import { lineData } from 'components/common/myctline'
-
+import { ref, nextTick, reactive, watch } from 'vue'
+import { useStore } from 'stores/rca/topological'
+import { storeToRefs } from 'pinia'
 import MyCtLine from 'components/common/MyCtLine.vue'
 import MyCtColumn from 'components/common/MyCtColumn.vue'
 
-// const { t } = useI18n()
-
-// const props = defineProps({
-//   foo: {
-//     type: String,
-//     required: false,
-//     default: ''
-//   }
-// })
-// const emits = defineEmits(['change', 'delete'])
-
-// const store = useStore()
-// const route = userRoute()
-interface Params {
-  style: {
-    width?: number
-    height?: number
-    [propName: string]: any
-  },
-  info: {
-    data: any
-    [propName: string]: any
-  },
-  [propName: string]: any
-}
-
-interface Props {
-  params?: Params
-  idName?: string
-  activeId?: string
-}
-
-const props = withDefaults(defineProps<Props>(), {
-  params: () => {
-    return {
-      style: {
-        width: 400,
-        height: 300
-      },
-      info: {
-        data: [{ value: 5.6 }]
-      }
-    }
-  },
-  idName: 'c',
-  activeId: 'activeId'
-})
+const store = useStore()
+const { nodeInfo } = storeToRefs(store)
 
 const qpsRef = ref()
 const tpsRef = ref()
 const sysLoadRef = ref()
-const diskThroughputRef = ref()
-const diskIOPSRef = ref()
-const networkCardThRef = ref()
+// const diskThroughputRef = ref()
+// const diskIOPSRef = ref()
+// const networkCardThRef = ref()
 
 const qpsParams = reactive({
   style: {
@@ -67,21 +22,40 @@ const qpsParams = reactive({
     height: 150
   },
   info: {
-    data: lineData,
+    data: nodeInfo.value.chartData.performance.mysqlQPS,
     chart: {
-      position: 'time*cpu',
-      padding: [15, 50, 20, 30],
-      color: 'date',
+      position: 'xValue*y1Value',
+      padding: [30, 20, 25, 50],
+      color: 'type',
       area: false,
       shape: 'smooth',
+      alias: '次/秒',
+      scale: {
+        max: 600,
+        min: 0
+      },
       annotation: {
         line: {
-          isHas: false
+          isHas: true // 展示预警线
+        },
+        lineData: { // 数据同上面warningLine中的data
+          usage: {
+            label: '预警线', // 预警线名
+            value: nodeInfo.value.chartData.warning?.qps || 500, // 预警值
+            alias: '' // 预警线单位
+          }
         },
         regionFilter: {
-          isHas: false
+          isHas: true
+        },
+        filterData: {
+          usage: {
+            start: 1000, // 小于当前值
+            end: nodeInfo.value.chartData.warning?.qps || 500 // 且大于当前值 的范围标红
+          }
         }
-      }
+      },
+      legend: false
     }
   }
 })
@@ -91,23 +65,40 @@ const tpsParams = reactive({
     height: 150
   },
   info: {
-    data: lineData,
+    data: nodeInfo.value.chartData.performance.mysqlTPS,
     chart: {
-      position: 'time*cpu',
-      padding: [15, 50, 20, 30],
-      area: true,
-      color: {
-        type: 'date',
-        color: ['#21BA45']
+      position: 'xValue*y1Value',
+      padding: [30, 20, 25, 50],
+      color: 'type',
+      area: false,
+      shape: 'smooth',
+      alias: '次/秒',
+      scale: {
+        max: 600,
+        min: 0
       },
       annotation: {
         line: {
-          isHas: false
+          isHas: true // 展示预警线
+        },
+        lineData: { // 数据同上面warningLine中的data
+          usage: {
+            label: '预警线', // 预警线名
+            value: nodeInfo.value.chartData.warning?.tps || 500, // 预警值
+            alias: '' // 预警线单位
+          }
         },
         regionFilter: {
-          isHas: false
+          isHas: true
+        },
+        filterData: {
+          usage: {
+            start: 1000, // 小于当前值
+            end: nodeInfo.value.chartData.warning?.tps || 500 // 且大于当前值 的范围标红
+          }
         }
-      }
+      },
+      legend: false
     }
   }
 })
@@ -117,40 +108,36 @@ const sysLoadParams = reactive({
     height: 200
   },
   info: {
-    data: [
-      { time: '10:17', type: '1m', value: 1.02 },
-      { time: '10:17', type: '5m', value: 1.09 },
-      { time: '10:17', type: '15m', value: 1.39 },
-      { time: '10:19', type: '1m', value: 1.00 },
-      { time: '10:19', type: '5m', value: 1.09 },
-      { time: '10:19', type: '15m', value: 1.00 },
-      { time: '10:21', type: '1m', value: 2.3 },
-      { time: '10:21', type: '5m', value: 1.53 },
-      { time: '10:21', type: '15m', value: 1.23 },
-      { time: '10:23', type: '1m', value: 1.34 },
-      { time: '10:23', type: '5m', value: 1.56 },
-      { time: '10:23', type: '15m', value: 1.29 },
-      { time: '10:25', type: '1m', value: 1.45 },
-      { time: '10:25', type: '5m', value: 1.63 },
-      { time: '10:25', type: '15m', value: 1.29 },
-      { time: '10:27', type: '1m', value: 1.34 },
-      { time: '10:27', type: '5m', value: 1.74 },
-      { time: '10:27', type: '15m', value: 1.49 }
-    ],
+    data: nodeInfo.value.chartData.performance.load,
     chart: {
-      position: 'time*value',
-      padding: [15, 20, 60, 30],
-      color: {
-        type: 'type',
-        color: ['#21BA45', '#FFAC33', '#0090FF']
-      },
+      title: '系统平均负载',
+      position: 'xValue*y1Value',
+      padding: [30, 20, 25, 50],
+      color: 'type',
       alias: '',
+      scale: {
+        max: 10,
+        min: 0
+      },
       annotation: {
         line: {
-          isHas: false
+          isHas: true // 是否展示预警线
         },
-        regionFilter: {
-          isHas: false
+        lineData: { // 数据同上面warningLine中的data
+          sysLoad: {
+            label: '预警线', // 预警线名
+            value: 8, // 预警值
+            alias: '' // 预警线单位
+          }
+        },
+        regionFilter: { // 是否将预警线范围内的值覆盖成红色
+          isHas: true
+        },
+        filterData: {
+          sysLoad: {
+            start: 10, // 小于当前值
+            end: 8 // 且大于当前值 的范围标红
+          }
         }
       },
       legend: true
@@ -295,16 +282,16 @@ watch(() => isShow.value, async (val) => {
     qpsRef.value.show()
     tpsRef.value.show()
     sysLoadRef.value.show()
-    diskThroughputRef.value.show()
-    diskIOPSRef.value.show()
-    networkCardThRef.value.show()
+    // diskThroughputRef.value.show()
+    // diskIOPSRef.value.show()
+    // networkCardThRef.value.show()
   } else {
-    qpsRef.value.hidden()
-    tpsRef.value.hidden()
-    sysLoadRef.value.hidden()
-    diskThroughputRef.value.hidden()
-    diskIOPSRef.value.hidden()
-    networkCardThRef.value.hidden()
+    qpsRef.value && qpsRef.value.hidden()
+    tpsRef.value && tpsRef.value.hidden()
+    sysLoadRef.value && sysLoadRef.value.hidden()
+    // diskThroughputRef.value.hidden()
+    // diskIOPSRef.value.hidden()
+    // networkCardThRef.value.hidden()
   }
 })
 
@@ -314,12 +301,12 @@ defineExpose({ show, hidden })
 <template>
   <div class="PerformanceChart" v-if="isShow">
     <!-- qps, tps, 系统负载，磁盘吞吐量，磁盘iops使用量，网卡吞吐量 -->
-    <div class="q-pa-sm">
+    <div class="q-px-sm">
       <p class="title"><i class="lar la-circle text-aiops-primary"></i> qps</p>
       <my-ct-line ref="qpsRef" :params="qpsParams" idName="qps"></my-ct-line>
     </div>
 
-    <div class="q-pa-sm">
+    <div class="q-px-sm">
       <p class="title"><i class="lar la-circle text-aiops-primary"></i> tps</p>
       <my-ct-line ref="tpsRef" :params="tpsParams" idName="tps"></my-ct-line>
     </div>
@@ -329,17 +316,17 @@ defineExpose({ show, hidden })
       <my-ct-line ref="sysLoadRef" :params="sysLoadParams" idName="sysLoad"></my-ct-line>
     </div>
 
-    <div class="q-px-sm">
+    <div class="q-px-sm" v-if="false">
       <p class="title"><i class="lar la-circle text-aiops-primary"></i> 磁盘吞吐量</p>
       <my-ct-line ref="diskThroughputRef" :params="diskThroughputParams" idName="diskThroughput"></my-ct-line>
     </div>
 
-    <div class="q-px-sm">
+    <div class="q-px-sm" v-if="false">
       <p class="title"><i class="lar la-circle text-aiops-primary"></i> 磁盘iops使用量</p>
       <my-ct-line ref="diskIOPSRef" :params="diskIOPSParams" idName="diskIOPS"></my-ct-line>
     </div>
 
-    <div class="q-px-sm">
+    <div class="q-px-sm" v-if="false">
       <p class="title"><i class="lar la-circle text-aiops-primary"></i> 网卡吞吐量</p>
       <my-ct-line ref="networkCardThRef" :params="networkCardThParams" idName="networkCardTh"></my-ct-line>
     </div>

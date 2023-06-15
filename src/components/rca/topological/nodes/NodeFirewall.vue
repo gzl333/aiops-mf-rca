@@ -38,7 +38,7 @@ const clearState = () => {
 
 const dialog = ref()
 
-const tab = ref('source')
+const tab = ref('')
 const sourceRef = ref()
 const netRef = ref()
 const portRef = ref()

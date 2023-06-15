@@ -1,8 +1,28 @@
 // 更新日志内容，版本降序排列
 export const logs = [
   {
+    version: 'v0.0.10',
+    date: '2023-06-15',
+    time: '16:08:09',
+    release_author: 'yuumi',
+    updates: [
+      {
+        info: '1. 接入mysql图表cpu、内存、磁盘、分区、qps、tps、负载等数据。',
+        commit_author: 'yuumi'
+      },
+      {
+        info: '2. 添加左侧菜单：中国科技网、dns系统。 变更提出：张海明。',
+        commit_author: 'yuumi'
+      },
+      {
+        info: '接口提供：庞文豪',
+        commit_author: 'yuumi'
+      }
+    ]
+  },
+  {
     version: 'v0.0.9',
-    date: '2023-06-13',
+    date: '2023-06-14',
     time: '15:08:09',
     release_author: 'yuumi',
     updates: [

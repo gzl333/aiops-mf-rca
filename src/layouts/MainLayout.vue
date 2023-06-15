@@ -6,24 +6,35 @@ const appPath = process.env.appPath as string
 
 const navList = ref([
   {
+    name: 'cstnetSys', // 中国科技网
+    icon: '',
+    path: appPath + '/cstnetSystem',
+    pathName: 'cstnetSystem'
+  },
+  {
+    name: 'dnsSys', // dns系统
+    icon: 'dns',
+    path: appPath + '/dnsSystem',
+    pathName: 'dnsSystem'
+  },
+  {
     name: 'mailSys', // 邮件系统
     icon: 'mail_outline',
     path: appPath + '/mailSystem',
     pathName: 'mailSystem'
-  },
-  {
-    name: 'monitorU', // 监控单元
-    icon: 'filter_center_focus',
-    path: appPath + '/monitorUnit',
-    pathName: 'monitorUnit'
   }
+  // {
+  //   name: 'monitorU', // 监控单元
+  //   icon: 'filter_center_focus',
+  //   path: appPath + '/monitorUnit',
+  //   pathName: 'monitorUnit'
+  // }
   // {
   //   name: 'topo', // 拓扑图
   //   icon: 'bubble_chart',
   //   path: appPath + '/topological',
   //   pathName: 'topological'
   // }
-
 ])
 </script>
 

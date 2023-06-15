@@ -149,7 +149,7 @@ const fields = reactive({
   }
 })
 
-const tab = ref('performance')
+const tab = ref('')
 const performanceRef = ref()
 const sourceRef = ref()
 const netRef = ref()

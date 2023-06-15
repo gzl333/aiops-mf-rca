@@ -69,8 +69,13 @@ watch(() => router.currentRoute.value.path, (val) => {
           :active="active === item.path"
           @click="navigateToUrl(item.path)"
         >
-          <q-item-section class="column items-center">
+          <q-item-section class="column items-center" v-if="item.pathName !== 'cstnetSystem'">
             <q-icon :name="item.icon" size="lg"/>
+            <div class="active-text text-center">{{ tc(item.name) }}</div>
+          </q-item-section>
+          <q-item-section class="column items-center" v-else>
+            <img src="../../assets/cst.png" alt="" v-if="active !== item.path">
+            <img src="../../assets/cst_blue.png" alt="" v-else>
             <div class="active-text text-center">{{ tc(item.name) }}</div>
           </q-item-section>
         </q-item>

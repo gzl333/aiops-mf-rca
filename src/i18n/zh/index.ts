@@ -10,6 +10,8 @@ export default {
   monitorU: '监控单元',
   topo: '拓扑图',
   mailSys: '邮件系统',
+  dnsSys: 'DNS系统',
+  cstnetSys: '中国科技网',
   // 筛选组件
   business: '业务系统',
   timeSel: '时间选择',
